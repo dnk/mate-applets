@@ -1728,9 +1728,11 @@ create_layout(ProgressData *battstat)
 {
   if (DEBUG) g_print("create_layout()\n");
 
+#if !GTK_CHECK_VERSION (3, 0, 0)
   /* Have our background automatically painted. */
   mate_panel_applet_set_background_widget( MATE_PANEL_APPLET( battstat->applet ),
                                       GTK_WIDGET( battstat->applet ) );
+#endif
 
   /* Allocate the four widgets that we need. */
   battstat->table = gtk_table_new( 3, 3, FALSE );
