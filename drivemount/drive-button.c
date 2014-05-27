@@ -79,7 +79,23 @@ drive_button_class_init (DriveButtonClass *class)
     GTK_WIDGET_CLASS(class)->button_press_event = drive_button_button_press;
     GTK_WIDGET_CLASS(class)->key_press_event = drive_button_key_press;
 
-#if !GTK_CHECK_VERSION (3, 0, 0)
+#if GTK_CHECK_VERSION (3, 0, 0)
+    GtkCssProvider *provider;
+
+    provider = gtk_css_provider_new ();
+    gtk_css_provider_load_from_data (provider,
+                                     "DriveButton {\n"
+                                     " border-width: 0px;\n"
+                                     " -GtkWidget-focus-line-width: 0px;\n"
+                                     " -GtkWidget-focus-padding: 0px;\n"
+                                     "}",
+                                     -1, NULL);
+    gtk_style_context_add_provider_for_screen (gdk_screen_get_default(),
+                                    GTK_STYLE_PROVIDER (provider),
+                                    GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+    g_object_unref (provider);
+
+#else
     gtk_rc_parse_string ("\n"
 			 "   style \"drive-button-style\"\n"
 			 "   {\n"
@@ -111,22 +127,6 @@ drive_button_init (DriveButton *self)
     self->update_tag = 0;
 
     self->popup_menu = NULL;
-#if GTK_CHECK_VERSION (3, 0, 0)
-    GtkCssProvider *provider;
-
-    provider = gtk_css_provider_new ();
-    gtk_css_provider_load_from_data (provider,
-                                     "DriveButton {\n"
-                                     " border-width: 0px;\n"
-                                     " -GtkWidget-focus-line-width: 0px;\n"
-                                     " -GtkWidget-focus-padding: 0px;\n"
-                                     "}",
-                                     -1, NULL);
-    gtk_style_context_add_provider (gtk_widget_get_style_context (GTK_WIDGET(self)),
-                                    GTK_STYLE_PROVIDER (provider),
-                                    GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
-    g_object_unref (provider);
-#endif
 }
 
 GtkWidget *
