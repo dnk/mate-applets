@@ -93,8 +93,13 @@ add_edit_dialog_create (charpick_data *curr_data, gchar *string, gchar *title)
 
 	dialog = gtk_dialog_new_with_buttons (_(title), GTK_WINDOW (curr_data->propwindow),
 							    GTK_DIALOG_DESTROY_WITH_PARENT,
+#if GTK_CHECK_VERSION (3, 10, 0)
+							    _("_Cancel"), GTK_RESPONSE_CANCEL,
+							    _("_OK"), GTK_RESPONSE_OK,
+#else
 							    GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 							    GTK_STOCK_OK, GTK_RESPONSE_OK,
+#endif
 							    NULL);
 
 	gtk_window_set_transient_for (GTK_WINDOW (dialog), GTK_WINDOW (curr_data->propwindow));
@@ -105,12 +110,20 @@ add_edit_dialog_create (charpick_data *curr_data, gchar *string, gchar *title)
 	gtk_box_set_spacing (GTK_BOX (gtk_dialog_get_content_area(GTK_DIALOG (dialog))), 2);
 
 	dbox = gtk_dialog_get_content_area(GTK_DIALOG (dialog));
-	
+
+#if GTK_CHECK_VERSION (3, 0, 0)
+	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 12);
+#else
 	vbox = gtk_vbox_new (FALSE, 12);
+#endif
 	gtk_box_pack_start (GTK_BOX (dbox), vbox, TRUE, TRUE, 0);
 	gtk_container_set_border_width (GTK_CONTAINER (vbox), 5);
-	
+
+#if GTK_CHECK_VERSION (3, 0, 0)
+	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12);
+#else
 	hbox = gtk_hbox_new (FALSE, 12);
+#endif
 	gtk_box_pack_start (GTK_BOX (vbox), hbox, TRUE, TRUE, 0);
 	
 	label = gtk_label_new_with_mnemonic (_("_Palette:"));
@@ -409,8 +422,12 @@ create_hig_catagory (GtkWidget *main_box, gchar *title)
 	GtkWidget *vbox, *vbox2, *hbox;
 	GtkWidget *label;
 	gchar *tmp;
-		
+
+#if GTK_CHECK_VERSION (3, 0, 0)
+	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
+#else
 	vbox = gtk_vbox_new (FALSE, 6);
+#endif
 	gtk_box_pack_start (GTK_BOX (main_box), vbox, TRUE, TRUE, 0);
 
 	tmp = g_strdup_printf ("<b>%s</b>", title);
@@ -420,13 +437,21 @@ create_hig_catagory (GtkWidget *main_box, gchar *title)
 	g_free (tmp);
 	gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 
+#if GTK_CHECK_VERSION (3, 0, 0)
+	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
+#else
 	hbox = gtk_hbox_new (FALSE, 0);
+#endif
 	gtk_box_pack_start (GTK_BOX (vbox), hbox, TRUE, TRUE, 0);
 	
 	label = gtk_label_new ("    ");
 	gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
-	
+
+#if GTK_CHECK_VERSION (3, 0, 0)
+	vbox2 = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
+#else
 	vbox2 = gtk_vbox_new (FALSE, 6);
+#endif
 	gtk_box_pack_start (GTK_BOX (hbox), vbox2, TRUE, TRUE, 0);
 
 	return vbox2;
@@ -444,26 +469,42 @@ static void default_chars_frame_create(charpick_data *curr_data)
 
   dbox = gtk_dialog_get_content_area(GTK_DIALOG (dialog));
 
+#if GTK_CHECK_VERSION (3, 0, 0)
+  vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 18);
+#else
   vbox = gtk_vbox_new (FALSE, 18);
+#endif
   gtk_container_set_border_width (GTK_CONTAINER (vbox), 5);
   gtk_box_pack_start (GTK_BOX (dbox), vbox, TRUE, TRUE, 0);
 
   vbox1 = create_hig_catagory (vbox, _("Character Palette")); 
-  
+
+#if GTK_CHECK_VERSION (3, 0, 0)
+  vbox3 = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
+#else
   vbox3 = gtk_vbox_new (FALSE, 6);
+#endif
   gtk_box_pack_start (GTK_BOX (vbox1), vbox3, TRUE, TRUE, 0);
   
   label = gtk_label_new_with_mnemonic(_("_Palettes:"));
   gtk_box_pack_start(GTK_BOX(vbox3), label, FALSE, FALSE, 0);
   gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
   gtk_widget_show(label);
-	  
+
+#if GTK_CHECK_VERSION (3, 0, 0)
+  hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12);
+#else
   hbox = gtk_hbox_new (FALSE, 12);
+#endif
   gtk_box_pack_start (GTK_BOX (vbox3), hbox, TRUE, TRUE, 0); 
   scrolled = create_palettes_tree (curr_data, label);
   gtk_box_pack_start (GTK_BOX (hbox), scrolled, TRUE, TRUE, 0);
-  
+
+#if GTK_CHECK_VERSION (3, 0, 0)
+  vbox2 = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
+#else
   vbox2 = gtk_vbox_new (FALSE, 6);
+#endif
   gtk_box_pack_start (GTK_BOX (hbox), vbox2, FALSE, FALSE, 0);
   button = gtk_button_new_from_stock (GTK_STOCK_ADD);
   gtk_box_pack_start (GTK_BOX (vbox2), button, FALSE, FALSE, 0);
@@ -540,8 +581,13 @@ show_preferences_dialog (GtkAction     *action,
   curr_data->propwindow = gtk_dialog_new_with_buttons (_("Character Palette Preferences"), 
   					    NULL,
 					    GTK_DIALOG_DESTROY_WITH_PARENT,
+#if GTK_CHECK_VERSION (3, 10, 0)
+					    _("_Close"), GTK_RESPONSE_CLOSE,
+					    _("_Help"), GTK_RESPONSE_HELP,
+#else
 					    GTK_STOCK_CLOSE, GTK_RESPONSE_CLOSE,
 					    GTK_STOCK_HELP, GTK_RESPONSE_HELP,
+#endif
 					    NULL);
   gtk_window_set_screen (GTK_WINDOW (curr_data->propwindow),
 			 gtk_widget_get_screen (curr_data->applet));

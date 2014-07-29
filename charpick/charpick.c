@@ -274,12 +274,11 @@ static void
 menuitem_activated (GtkMenuItem *menuitem, charpick_data *curr_data)
 {
 	gchar *string;
-	MatePanelApplet *applet = MATE_PANEL_APPLET (curr_data->applet);
-	
+
 	string = g_object_get_data (G_OBJECT (menuitem), "string");
 	if (g_ascii_strcasecmp (curr_data->charlist, string) == 0)
 		return;
-	
+
 	curr_data->charlist = string;
 	build_table (curr_data);
 	if (g_settings_is_writable (curr_data->settings, "current-list"))
@@ -323,8 +322,12 @@ get_menu_pos (GtkMenu *menu, gint *x, gint *y, gboolean *push_in, gpointer data)
 	GtkRequisition  reqmenu;
 	gint tempx, tempy, width, height;
 	gint screen_width, screen_height;
-	
+
+#if GTK_CHECK_VERSION (3, 0, 0)
+	gtk_widget_get_preferred_size (GTK_WIDGET (menu), &reqmenu, NULL);
+#else
 	gtk_widget_size_request (GTK_WIDGET (menu), &reqmenu);
+#endif
 	gdk_window_get_origin (GDK_WINDOW (gtk_widget_get_window(curr_data->applet)), &tempx, &tempy);
 	gdk_window_get_geometry (GDK_WINDOW (gtk_widget_get_window(curr_data->applet)), NULL, NULL,
 				 &width, &height
@@ -411,9 +414,17 @@ build_table(charpick_data *p_curr_data)
     gtk_widget_destroy(p_curr_data->box);
     
   if (p_curr_data->panel_vertical)
+#if GTK_CHECK_VERSION (3, 0, 0)
+    box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
+#else
     box = gtk_vbox_new (FALSE, 0);
-  else 
+#endif
+  else
+#if GTK_CHECK_VERSION (3, 0, 0)
+    box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     box = gtk_hbox_new (FALSE, 0);
+#endif
   gtk_widget_show (box);
   p_curr_data->box = box;
   
@@ -483,9 +494,13 @@ build_table(charpick_data *p_curr_data)
     force_no_focus_padding (toggle_button[i]);
     gtk_widget_set_tooltip_text (toggle_button[i], name);
     g_free (name);
-                      
+
+#if GTK_CHECK_VERSION (3, 0, 0)
+    gtk_widget_get_preferred_size (toggle_button[i], &req, NULL);
+#else
     gtk_widget_size_request (toggle_button[i], &req);
-    
+#endif
+
     max_width = MAX (max_width, req.width);
     max_height = MAX (max_height, req.height-2);
   
@@ -500,10 +515,20 @@ build_table(charpick_data *p_curr_data)
   
   if (p_curr_data->panel_vertical) {
     size_ratio = p_curr_data->panel_size / max_width;
+#if GTK_CHECK_VERSION (3, 0, 0)
+    button_box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
+    gtk_box_set_homogeneous (GTK_BOX(button_box), TRUE);
+#else
     button_box = gtk_hbox_new (TRUE, 0);
+#endif
   } else {
     size_ratio = p_curr_data->panel_size / max_height;
+#if GTK_CHECK_VERSION (3, 0, 0)
+    button_box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
+    gtk_box_set_homogeneous (GTK_BOX(button_box), TRUE);
+#else
     button_box = gtk_vbox_new (TRUE, 0);
+#endif
   }
 
   gtk_box_pack_start (GTK_BOX (box), button_box, TRUE, TRUE, 0);
@@ -511,8 +536,14 @@ build_table(charpick_data *p_curr_data)
   size_ratio = MAX (size_ratio, 1);
   row_box = g_new0 (GtkWidget *, size_ratio);
   for (i=0; i < size_ratio; i++) {
-  	if (!p_curr_data->panel_vertical) row_box[i] = gtk_hbox_new (TRUE, 0);
-  	else row_box[i] = gtk_vbox_new (TRUE, 0);
+#if GTK_CHECK_VERSION (3, 0, 0)
+	if (!p_curr_data->panel_vertical) row_box[i] = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
+	else row_box[i] = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
+	gtk_box_set_homogeneous (GTK_BOX(row_box[i]), TRUE);
+#else
+	if (!p_curr_data->panel_vertical) row_box[i] = gtk_hbox_new (TRUE, 0);
+	else row_box[i] = gtk_vbox_new (TRUE, 0);
+#endif
   	gtk_box_pack_start (GTK_BOX (button_box), row_box[i], TRUE, TRUE, 0);
   }
   
@@ -647,11 +678,10 @@ save_chartable (charpick_data *curr_data)
 static void
 get_chartable (charpick_data *curr_data)
 {
-	MatePanelApplet *applet = MATE_PANEL_APPLET (curr_data->applet);
 	gint i, n;
-	GSList *value = NULL;
+	GList *value = NULL;
 	
-	value = mate_panel_applet_settings_get_gslist (curr_data->settings, "chartable");
+	value = mate_panel_applet_settings_get_glist (curr_data->settings, "chartable");
 	if (value) {
 		curr_data->chartable = value;
 	}
