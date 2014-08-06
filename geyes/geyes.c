@@ -159,10 +159,21 @@ timer_cb (EyesApplet *eyes_applet)
         gint pupil_x, pupil_y;
         gint i;
 
+#if GTK_CHECK_VERSION (3, 0, 0)
+        GdkDisplay *display = gtk_widget_get_display (GTK_WIDGET(eyes_applet->applet));
+        GdkDeviceManager *device_manager = gdk_display_get_device_manager (display);
+        GdkDevice *device = gdk_device_manager_get_client_pointer (device_manager);
+#endif
+
         for (i = 0; i < eyes_applet->num_eyes; i++) {
 		if (gtk_widget_get_realized (eyes_applet->eyes[i])) {
+#if GTK_CHECK_VERSION (3, 0, 0)
+			gdk_window_get_device_position (gtk_widget_get_window(eyes_applet->eyes[i]), device,
+						&x, &y, NULL);
+#else
 			gtk_widget_get_pointer (eyes_applet->eyes[i], 
 						&x, &y);
+#endif
 			if ((x != eyes_applet->pointer_last_x[i]) || (y != eyes_applet->pointer_last_y[i])) { 
 
 				calculate_pupil_xy (eyes_applet, x, y, &pupil_x, &pupil_y, eyes_applet->eyes[i]);
@@ -230,7 +241,11 @@ setup_eyes (EyesApplet *eyes_applet)
 {
 	int i;
 
+#if GTK_CHECK_VERSION (3, 0, 0)
+        eyes_applet->hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
+#else
         eyes_applet->hbox = gtk_hbox_new (FALSE, 0);
+#endif
         gtk_box_pack_start (GTK_BOX (eyes_applet->vbox), eyes_applet->hbox, TRUE, TRUE, 0);
 
 	eyes_applet->eyes = g_new0 (GtkWidget *, eyes_applet->num_eyes);
@@ -294,7 +309,11 @@ create_eyes (MatePanelApplet *applet)
 	EyesApplet *eyes_applet = g_new0 (EyesApplet, 1);
 
         eyes_applet->applet = applet;
+#if GTK_CHECK_VERSION (3, 0, 0)
+        eyes_applet->vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
+#else
         eyes_applet->vbox = gtk_vbox_new (FALSE, 0);
+#endif
 	eyes_applet->settings = 
 		mate_panel_applet_settings_new (applet, "org.mate.panel.applet.geyes");
 
@@ -304,11 +323,7 @@ create_eyes (MatePanelApplet *applet)
 }
 
 static void
-#if GTK_CHECK_VERSION (3, 0, 0)
 dispose_cb (GObject *object, EyesApplet *eyes_applet)
-#else
-destroy_cb (GtkObject *object, EyesApplet *eyes_applet)
-#endif
 {
 	g_return_if_fail (eyes_applet);
 
@@ -446,13 +461,8 @@ geyes_applet_fill (MatePanelApplet *applet)
 			  G_CALLBACK (applet_back_change),
 			  eyes_applet);
 	g_signal_connect (eyes_applet->vbox,
-#if GTK_CHECK_VERSION (3, 0, 0)
 			  "dispose",
 			  G_CALLBACK (dispose_cb),
-#else
-			  "destroy",
-			  G_CALLBACK (destroy_cb),
-#endif
 			  eyes_applet);
 
 	gtk_widget_show_all (GTK_WIDGET (eyes_applet->applet));

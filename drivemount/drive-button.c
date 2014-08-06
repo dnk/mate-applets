@@ -53,11 +53,7 @@ static void     drive_button_set_mount    (DriveButton    *self,
 static void     drive_button_reset_popup  (DriveButton    *self);
 static void     drive_button_ensure_popup (DriveButton    *self);
 
-#if GTK_CHECK_VERSION (3, 0, 0)
 static void     drive_button_dispose      (GObject        *object);
-#else
-static void     drive_button_destroy      (GtkObject      *object);
-#endif
 #if 0
 static void     drive_button_unrealize    (GtkWidget      *widget);
 #endif /* 0 */
@@ -71,11 +67,7 @@ static void drive_button_theme_change     (GtkIconTheme   *icon_theme,
 static void
 drive_button_class_init (DriveButtonClass *class)
 {
-#if GTK_CHECK_VERSION (3, 0, 0)
     G_OBJECT_CLASS(class)->dispose = drive_button_dispose;
-#else
-    GTK_OBJECT_CLASS(class)->destroy = drive_button_destroy;
-#endif
     GTK_WIDGET_CLASS(class)->button_press_event = drive_button_button_press;
     GTK_WIDGET_CLASS(class)->key_press_event = drive_button_key_press;
 
@@ -160,11 +152,7 @@ drive_button_new_from_mount (GMount *mount)
 }
 
 static void
-#if GTK_CHECK_VERSION (3, 0, 0)
 drive_button_dispose (GObject *object)
-#else
-drive_button_destroy (GtkObject *object)
-#endif
 {
     DriveButton *self = DRIVE_BUTTON (object);
 
@@ -176,13 +164,8 @@ drive_button_destroy (GtkObject *object)
 
     drive_button_reset_popup (self);
 
-#if GTK_CHECK_VERSION (3, 0, 0)
     if (G_OBJECT_CLASS (drive_button_parent_class)->dispose)
 	(* G_OBJECT_CLASS (drive_button_parent_class)->dispose) (object);
-#else
-    if (GTK_OBJECT_CLASS (drive_button_parent_class)->destroy)
-	(* GTK_OBJECT_CLASS (drive_button_parent_class)->destroy) (object);
-#endif
 }
 
 #if 0
@@ -397,8 +380,13 @@ drive_button_update (gpointer user_data)
     g_free (display_name);
 
     /* base the icon size on the desired button size */
+#if GTK_CHECK_VERSION (3, 0, 0)
+    gtk_widget_get_preferred_size (GTK_WIDGET (self), &button_req, NULL);
+    gtk_widget_get_preferred_size (gtk_bin_get_child (GTK_BIN (self)), &image_req, NULL);
+#else
     gtk_widget_size_request (GTK_WIDGET (self), &button_req);
     gtk_widget_size_request (gtk_bin_get_child (GTK_BIN (self)), &image_req);
+#endif
     width = self->icon_size - (button_req.width - image_req.width);
     height = self->icon_size - (button_req.height - image_req.height);
 
@@ -431,7 +419,11 @@ drive_button_update (gpointer user_data)
     gtk_image_set_from_pixbuf (GTK_IMAGE (gtk_bin_get_child (GTK_BIN (self))), pixbuf);
     g_object_unref (pixbuf);
 
+#if GTK_CHECK_VERSION (3, 0, 0)
+    gtk_widget_get_preferred_size (GTK_WIDGET (self), &button_req, NULL);
+#else
     gtk_widget_size_request (GTK_WIDGET (self), &button_req);
+#endif
 
     return FALSE;
 }
@@ -498,11 +490,7 @@ static void
 drive_button_reset_popup (DriveButton *self)
 {
     if (self->popup_menu)
-#if GTK_CHECK_VERSION (3, 0, 0)
 	gtk_widget_destroy (GTK_WIDGET (self->popup_menu));
-#else
-	gtk_object_destroy (GTK_OBJECT (self->popup_menu));
-#endif
     self->popup_menu = NULL;
 }
 
@@ -650,11 +638,7 @@ open_drive (DriveButton *self, GtkWidget *item)
 	else
 	    gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog), "Could not find Caja");
 	g_signal_connect (dialog, "response",
-#if GTK_CHECK_VERSION (3, 0, 0)
 			  G_CALLBACK (gtk_widget_destroy), NULL);
-#else
-			  G_CALLBACK (gtk_object_destroy), NULL);
-#endif
 	gtk_widget_show (dialog);
 	g_error_free (error);
     }
