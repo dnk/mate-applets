@@ -57,7 +57,7 @@ load_graph_draw (LoadGraph *g)
 
     if (!g->surface)
 		g->surface = gdk_window_create_similar_surface (gtk_widget_get_window (g->disp),
-								CAIRO_CONTENT_COLOR,
+								CAIRO_CONTENT_COLOR_ALPHA,
 								g->draw_width, g->draw_height);
 
     cr = cairo_create (g->surface);
@@ -180,7 +180,7 @@ load_graph_configure (GtkWidget *widget, GdkEventConfigure *event,
 
     if (!c->surface)
 	c->surface = gdk_window_create_similar_surface (gtk_widget_get_window (c->disp),
-							CAIRO_CONTENT_COLOR,
+							CAIRO_CONTENT_COLOR_ALPHA,
 							c->draw_width, c->draw_height);
     gtk_widget_queue_draw (widget);
 

@@ -271,11 +271,6 @@ color_picker_set_cb(GtkColorButton *color_picker, gchar *key)
 	gdk_color_parse(color_string,
 			&(ma->graphs[prop_type]->colors[g_ascii_digit_value(key[strlen(key) - 1]) ]) );
 #endif
-	
-#if !GTK_CHECK_VERSION (3, 0, 0)
-	ma->graphs[prop_type]->colors_allocated = FALSE;
-#endif
-	
 	return;
 }
 
@@ -316,6 +311,9 @@ add_color_selector(GtkWidget *page, gchar *name, gchar *key, MultiloadApplet *ma
 #endif
 	label = gtk_label_new_with_mnemonic(name);
 	color_picker = gtk_color_button_new();
+#if GTK_CHECK_VERSION (3, 4, 0)
+	gtk_color_chooser_set_use_alpha (GTK_COLOR_CHOOSER(color_picker), TRUE);
+#endif
 	gtk_label_set_mnemonic_widget (GTK_LABEL (label), color_picker);
 	
 	gtk_box_pack_start(GTK_BOX(vbox), color_picker, FALSE, FALSE, 0);
