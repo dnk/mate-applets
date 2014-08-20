@@ -61,6 +61,7 @@ load_graph_draw (LoadGraph *g)
 								g->draw_width, g->draw_height);
 
     cr = cairo_create (g->surface);
+    cairo_set_operator (cr, CAIRO_OPERATOR_SOURCE);
     cairo_set_line_width (cr, 1.0);
     cairo_set_line_cap (cr, CAIRO_LINE_CAP_ROUND);
     cairo_set_line_join (cr, CAIRO_LINE_JOIN_ROUND);
