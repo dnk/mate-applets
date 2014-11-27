@@ -54,9 +54,9 @@ typedef struct
 
     GSettings         *settings;
 
-    GtkLabel          *label;
-    GtkImage          *image;
-    GtkHBox           *hbox;
+    GtkWidget         *label;
+    GtkWidget         *image;
+    GtkWidget         *hbox;
 
     gchar             *command;
     gint               interval;
@@ -176,7 +176,7 @@ command_settings_callback (GtkAction *action, CommandApplet *command_applet)
                       GTK_EXPAND | GTK_FILL | GTK_SHRINK, GTK_FILL,
                       0, 0);
 
-    gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (dialog)), table, TRUE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (dialog)), GTK_WIDGET(table), TRUE, TRUE, 0);
 
     g_signal_connect (dialog, "response", G_CALLBACK (gtk_widget_destroy), dialog);
 
@@ -251,7 +251,7 @@ command_execute (CommandApplet *command_applet)
 
     if (g_spawn_command_line_sync (command_applet->command, &output, NULL, &ret, &error))
     {
-        gtk_widget_set_tooltip_text (GTK_WIDGET (command_applet->label), command_applet->command);
+        gtk_widget_set_tooltip_text (command_applet->label, command_applet->command);
 
         if ((output != NULL) && (output[0] != 0))
         {
@@ -266,17 +266,17 @@ command_execute (CommandApplet *command_applet)
 
                     if (goutput)
                     {
-                        gtk_label_set_use_markup (command_applet->label, TRUE);
-                        gtk_label_set_markup (command_applet->label, goutput);
+                        gtk_label_set_use_markup (GTK_LABEL(command_applet->label), TRUE);
+                        gtk_label_set_markup (GTK_LABEL(command_applet->label), goutput);
                     }
                     if (icon)
-                        gtk_image_set_from_icon_name (command_applet->image, icon, 24);
+                        gtk_image_set_from_icon_name (GTK_IMAGE(command_applet->image), icon, 24);
 
                     g_free (goutput);
                     g_free (icon);
                 }
                 else
-                    gtk_label_set_text (command_applet->label, ERROR_OUTPUT);
+                    gtk_label_set_text (GTK_LABEL(command_applet->label), ERROR_OUTPUT);
                 g_key_file_free (file);
             }
             else
@@ -296,14 +296,14 @@ command_execute (CommandApplet *command_applet)
                     output[strlen(output) - 1] = 0;
                 }
 
-                gtk_label_set_text (command_applet->label, output);
+                gtk_label_set_text (GTK_LABEL(command_applet->label), output);
             }
         }
         else
-            gtk_label_set_text (command_applet->label, ERROR_OUTPUT);
+            gtk_label_set_text (GTK_LABEL(command_applet->label), ERROR_OUTPUT);
     }
     else
-        gtk_label_set_text (command_applet->label, ERROR_OUTPUT);
+        gtk_label_set_text (GTK_LABEL(command_applet->label), ERROR_OUTPUT);
 
     g_free (output);
 
@@ -336,7 +336,11 @@ command_applet_fill (MatePanelApplet* applet)
     command_applet->command = g_settings_get_string (command_applet->settings, COMMAND_KEY);
     command_applet->width = g_settings_get_int (command_applet->settings, WIDTH_KEY);
 
+#if GTK_CHECK_VERSION (3, 0, 0)
+    command_applet->hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     command_applet->hbox = gtk_hbox_new (FALSE, 0);
+#endif
     command_applet->image = gtk_image_new_from_icon_name (APPLET_ICON, 24);
     command_applet->label = gtk_label_new (ERROR_OUTPUT);
     command_applet->timeout_id = 0;

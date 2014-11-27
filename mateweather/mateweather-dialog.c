@@ -61,6 +61,7 @@ G_DEFINE_TYPE(MateWeatherDialog, mateweather_dialog, GTK_TYPE_DIALOG);
 #define MONOSPACE_FONT_SCHEMA  "org.mate.interface"
 #define MONOSPACE_FONT_KEY     "monospace-font-name"
 
+#if 0
 static void mateweather_dialog_save_geometry(MateWeatherDialog* dialog)
 {
 	GSettings* settings;
@@ -95,6 +96,7 @@ static void mateweather_dialog_load_geometry(MateWeatherDialog* dialog)
 	}
 #endif
 }
+#endif
 
 static void response_cb(MateWeatherDialog* dialog, gint id, gpointer data)
 {
@@ -198,7 +200,7 @@ static void mateweather_dialog_create(MateWeatherDialog* dialog)
 
   gtk_window_set_screen (GTK_WINDOW (dialog),
 			 gtk_widget_get_screen (GTK_WIDGET (gw_applet->applet)));
-  mateweather_dialog_load_geometry (dialog);
+/*  mateweather_dialog_load_geometry (dialog); */
 
   /* Must come after load geometry, otherwise it will get reset. */
   gtk_window_set_resizable (GTK_WINDOW (dialog), TRUE);
@@ -211,7 +213,11 @@ static void mateweather_dialog_create(MateWeatherDialog* dialog)
   gtk_widget_show (weather_notebook);
   gtk_box_pack_start (GTK_BOX (weather_vbox), weather_notebook, TRUE, TRUE, 0);
 
+#if GTK_CHECK_VERSION (3, 0, 0)
+  cond_hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 2);
+#else
   cond_hbox = gtk_hbox_new (FALSE, 2);
+#endif
   gtk_widget_show (cond_hbox);
   gtk_container_add (GTK_CONTAINER (weather_notebook), cond_hbox);
   gtk_container_set_border_width (GTK_CONTAINER (cond_hbox), 4);
@@ -459,7 +465,11 @@ static void mateweather_dialog_create(MateWeatherDialog* dialog)
 
   if (gw_applet->mateweather_pref.location->zone_valid) {
 
+#if GTK_CHECK_VERSION (3, 0, 0)
+      forecast_hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
       forecast_hbox = gtk_hbox_new(FALSE, 0);
+#endif
       gtk_container_set_border_width (GTK_CONTAINER (forecast_hbox), 12);
       gtk_widget_show (forecast_hbox);
 
@@ -491,7 +501,11 @@ static void mateweather_dialog_create(MateWeatherDialog* dialog)
       radar_note_lbl = gtk_label_new_with_mnemonic (_("Radar Map"));
       gtk_widget_show (radar_note_lbl);
 
+#if GTK_CHECK_VERSION (3, 0, 0)
+      radar_vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
+#else
       radar_vbox = gtk_vbox_new (FALSE, 6);
+#endif
       gtk_widget_show (radar_vbox);
       gtk_notebook_append_page (GTK_NOTEBOOK (weather_notebook), radar_vbox, radar_note_lbl);
       gtk_container_set_border_width (GTK_CONTAINER (radar_vbox), 6);
@@ -673,7 +687,7 @@ static void mateweather_dialog_unrealize(GtkWidget* widget)
 {
     MateWeatherDialog* self = MATEWEATHER_DIALOG(widget);
 
-    mateweather_dialog_save_geometry(self);
+/*    mateweather_dialog_save_geometry(self); */
 
     GTK_WIDGET_CLASS(mateweather_dialog_parent_class)->unrealize(widget);
 }

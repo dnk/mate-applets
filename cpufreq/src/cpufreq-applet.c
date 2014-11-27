@@ -25,9 +25,6 @@
 
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
-#if GTK_CHECK_VERSION (3, 0, 0)
-#include <gdk/gdkkeysyms-compat.h>
-#endif
 #include <gio/gio.h>
 #include <mate-panel-applet.h>
 #include <mate-panel-applet-gsettings.h>
@@ -450,7 +447,7 @@ cpufreq_applet_size_request (GtkWidget *widget, GtkRequisition *requisition)
 		gint icon_width;
 
 		gtk_widget_get_preferred_width (applet->icon, &icon_width, NULL);
-		width = GTK_IS_HBOX (applet->box) ?
+		width = gtk_orientable_get_orientation (GTK_ORIENTABLE (applet->box)) == GTK_ORIENTATION_HORIZONTAL ?
 			labels_width + icon_width + 2 :
 			MAX (labels_width, icon_width + 2);
 #else
@@ -579,12 +576,12 @@ cpufreq_applet_key_press (GtkWidget *widget, GdkEventKey *event)
         applet = CPUFREQ_APPLET (widget);
 
         switch (event->keyval) {
-        case GDK_KP_Enter:
-        case GDK_ISO_Enter:
-        case GDK_3270_Enter:
-        case GDK_Return:
-        case GDK_space:
-        case GDK_KP_Space:
+        case GDK_KEY_KP_Enter:
+        case GDK_KEY_ISO_Enter:
+        case GDK_KEY_3270_Enter:
+        case GDK_KEY_Return:
+        case GDK_KEY_space:
+        case GDK_KEY_KP_Space:
                 cpufreq_applet_menu_popup (applet, event->time);
 
                 return TRUE;

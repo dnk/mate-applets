@@ -22,9 +22,6 @@
 #include "stickynotes_applet_callbacks.h"
 #include "stickynotes.h"
 #include <gdk/gdkkeysyms.h>
-#if GTK_CHECK_VERSION (3, 0, 0)
-#include <gdk/gdkkeysyms-compat.h>
-#endif
 #include <X11/Xatom.h>
 #include <gdk/gdkx.h>
 #include <libmate-desktop/mate-aboutdialog.h>
@@ -114,10 +111,10 @@ applet_key_cb (GtkWidget         *widget,
 {
 	switch (event->keyval)
 	{
-		case GDK_KP_Space:
-		case GDK_space:
-		case GDK_KP_Enter:
-		case GDK_Return:
+		case GDK_KEY_KP_Space:
+		case GDK_KEY_space:
+		case GDK_KEY_KP_Enter:
+		case GDK_KEY_Return:
 			stickynote_show_notes (TRUE);
 			return TRUE;
 	}
@@ -137,8 +134,6 @@ gboolean applet_cross_cb(GtkWidget *widget, GdkEventCrossing *event, StickyNotes
 /* Applet Callback : On focus (in or out) of the applet. */
 gboolean applet_focus_cb(GtkWidget *widget, GdkEventFocus *event, StickyNotesApplet *applet)
 {
-	applet->prelighted = event->in;
-
 	stickynotes_applet_update_icon(applet);
 
 	return FALSE;
@@ -179,19 +174,19 @@ void install_check_click_on_desktop (void)
 	{
 		/* Looks like the atoms are there */
 		Atom actual_type;
-		int  actual_format;
-		long nitems;
-		long bytes;
 		Window *data;
+		int actual_format;
+		gulong nitems;
+		gulong bytes;
 
 		/* We only use this extra property if the actual user-time property's missing */
-		int  status = XGetWindowProperty(GDK_DISPLAY_XDISPLAY(gdk_display_get_default()), desktop_window, user_time,
+		XGetWindowProperty(GDK_DISPLAY_XDISPLAY(gdk_display_get_default()), desktop_window, user_time,
 					0, 4, False, AnyPropertyType, &actual_type, &actual_format,
 					&nitems, &bytes, (unsigned char **)&data );
 		if (actual_type == None)
 		{
 			/* No user-time property, so look for the user-time-window */
-			status = XGetWindowProperty(GDK_DISPLAY_XDISPLAY(gdk_display_get_default()), desktop_window, user_time_window,
+			XGetWindowProperty(GDK_DISPLAY_XDISPLAY(gdk_display_get_default()), desktop_window, user_time_window,
 					0, 4, False, AnyPropertyType, &actual_type, &actual_format,
 					&nitems, &bytes, (unsigned char **)&data );
 			if (actual_type != None)

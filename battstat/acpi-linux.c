@@ -263,7 +263,7 @@ gboolean acpi_linux_init(struct acpi_info * acpiinfo)
   if (g_file_get_contents ("/sys/module/acpi/parameters/acpica_version", &pbuf, NULL, NULL)) {
     acpi_ver = strtoul (pbuf, NULL, 10);
     g_free (pbuf);
-  } else if (hash = read_file ("/proc/acpi/info", buf, sizeof (buf))) {
+  } else if ((hash = read_file ("/proc/acpi/info", buf, sizeof (buf)))) {
       acpi_ver = read_ulong (hash, "version");
       g_hash_table_destroy (hash);
   } else
@@ -350,22 +350,28 @@ gboolean acpi_process_event(struct acpi_info * acpiinfo)
     buffer=g_string_new(NULL);
     g_io_channel_read_line_string   ( acpiinfo->channel,buffer,&i,&gerror);
 
+    gboolean result;
 
     evt = parse_acpi_event(buffer);
       switch (evt) {
         case ACPI_EVENT_AC:
-          return update_ac_info(acpiinfo);
+          result = update_ac_info(acpiinfo);
+          break;
         case ACPI_EVENT_BATTERY_INFO:
           if (update_battery_info(acpiinfo)) {
             /* Update AC info on battery info updates.  This works around
              * a bug in ACPI (as per bug #163013).
              */
-            return update_ac_info(acpiinfo);
+            result = update_ac_info(acpiinfo);
+            break;
           }
           /* fall-through */
         default:
-          return FALSE;
+          result = FALSE;
       }
+
+    g_string_free(buffer, FALSE);
+    return result;
 }
 
 /*

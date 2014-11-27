@@ -11,7 +11,7 @@ AC_CONFIG_MACRO_DIR(m4)
 dnl ***************************************************************************
 dnl *** Minimum library versions for MATE-APPLETS                          ***
 dnl ***************************************************************************
-GLIB_REQUIRED=2.36.0
+GLIB_REQUIRED=2.32.0
 GIO_REQUIRED=2.15.3
 LIBPANEL4_REQUIRED=1.7.0
 LIBGTOP_REQUIRED=2.11.92
@@ -25,7 +25,6 @@ DBUS_GLIB_REQUIRED=0.74
 MATE_ICON_THEME_REQUIRED=1.1.0
 LIBXML_REQUIRED=2.5.0
 POLKIT_REQUIRED=0.92
-NETWORKMANAGER_REQUIRED=0.7
 dnl ***************************************************************************
 
 AM_MAINTAINER_MODE
@@ -292,27 +291,6 @@ AC_SUBST(LIBMATEWEATHER_CFLAGS)
 AC_SUBST(LIBMATEWEATHER_LIBS)
 AM_CONDITIONAL(BUILD_LIBMATEWEATHER_APPLETS, $build_libmateweather_applets)
 
-dnl -- check for NetworkManager -----------------------------------------------
-AC_ARG_ENABLE([networkmanager],
-	AC_HELP_STRING([--enable-networkmanager],
-	[Enable NetworkManager support @<:@default=yes@:>@]),
-	ENABLE_NETWORKMANAGER=$enableval, ENABLE_NETWORKMANAGER=yes)
-
-HAVE_NETWORKMANAGER=no
-NETWORKMANAGER_VERSION=unknown
-AC_SUBST(NETWORKMANAGER_VERSION)
-if test "x$ENABLE_NETWORKMANAGER" = "xyes"; then
-   PKG_CHECK_MODULES(NETWORKMANAGER, NetworkManager >= $NETWORKMANAGER_REQUIRED,
-   		HAVE_NETWORKMANAGER=yes, HAVE_NETWORKMANAGER=no)
-
-   if test "x$HAVE_NETWORKMANAGER" = "xyes"; then
-      AC_DEFINE(HAVE_NETWORKMANAGER, 1, [NetworkManager available])
-      NETWORKMANAGER_VERSION=`$PKG_CONFIG --modversion NetworkManager`
-      AC_SUBST(NETWORKMANAGER_CFLAGS)
-      AC_SUBST(NETWORKMANAGER_LIBS)
-      AC_SUBST(NETWORKMANAGER_VERSION)
-   fi
-fi
 
 dnl ***************************************************************************
 dnl *** find paths to installed binaries                                    ***
@@ -492,11 +470,15 @@ if test "x$HAVE_POLKIT" = "xyes"; then
    suid=no
 fi
 
+AC_ARG_WITH([cpufreq-lib],
+	AS_HELP_STRING([--with-cpufreq-lib=lib], [library to use for cpufreq applet @<:@default=cpufreq@:>@]),
+	[with_cpufreq_lib=$withval], [with_cpufreq_lib="cpufreq"])
+
 AC_CHECK_HEADER(cpufreq.h, have_libcpufreq=yes, have_libcpufreq=no)
 LIBCPUFREQ_LIBS=
 if test "x$have_libcpufreq" = "xyes"; then
    AC_DEFINE([HAVE_LIBCPUFREQ], [1], [Have libcpufreq.])
-   LIBCPUFREQ_LIBS=-lcpufreq
+   LIBCPUFREQ_LIBS="-l$with_cpufreq_lib"
 fi
 AM_CONDITIONAL(HAVE_LIBCPUFREQ, test x$have_libcpufreq = xyes)
 AC_SUBST(LIBCPUFREQ_LIBS)
@@ -715,7 +697,6 @@ mate-applets-$VERSION configure summary:
         - trashapplet              always
 
     Using DBUS:                    $HAVE_DBUS
-    Using NetworkManager:          $HAVE_NETWORKMANAGER
     Using HAL:                     $HAVE_HAL
     Using UPOWER:                  $HAVE_UPOWER
     Using libnotify:               $HAVE_LIBNOTIFY

@@ -31,7 +31,6 @@
 #include <gdk/gdkkeysyms.h>
 #if GTK_CHECK_VERSION (3, 0, 0)
 #include <gio/gdesktopappinfo.h>
-#include <gdk/gdkkeysyms-compat.h>
 #endif
 
 #include <string.h>
@@ -264,10 +263,10 @@ drive_button_key_press (GtkWidget      *widget,
     DriveButton *self = DRIVE_BUTTON (widget);
 
     switch (event->keyval) {
-    case GDK_KP_Space:
-    case GDK_space:
-    case GDK_KP_Enter:
-    case GDK_Return:
+    case GDK_KEY_KP_Space:
+    case GDK_KEY_space:
+    case GDK_KEY_KP_Enter:
+    case GDK_KEY_Return:
 	drive_button_ensure_popup (self);
 	if (self->popup_menu) {
 	    gtk_menu_popup (GTK_MENU (self->popup_menu), NULL, NULL,
@@ -970,13 +969,11 @@ drive_button_ensure_popup (DriveButton *self)
     gtk_container_add (GTK_CONTAINER (self->popup_menu), item);
 
     if (mounted) {
-	if (!ejectable) {
-	    label = g_strdup_printf (_("Un_mount %s"), display_name);
-	    item = create_menu_item (self, NULL, label,
-				     G_CALLBACK (unmount_drive), TRUE);
-	    g_free (label);
-	    gtk_container_add (GTK_CONTAINER (self->popup_menu), item);
-	}
+        label = g_strdup_printf (_("Un_mount %s"), display_name);
+        item = create_menu_item (self, NULL, label,
+				 G_CALLBACK (unmount_drive), TRUE);
+        g_free (label);
+        gtk_container_add (GTK_CONTAINER (self->popup_menu), item);
     } else {
 	label = g_strdup_printf (_("_Mount %s"), display_name);
 	item = create_menu_item (self, NULL, label,
