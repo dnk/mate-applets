@@ -3,6 +3,7 @@ SUBDIRS = docs pixmaps
 AM_CPPFLAGS = \
 	$(MATE_APPLETS4_CFLAGS) \
 	$(MATEDESKTOP_CFLAGS) \
+	$(GIO_CFLAGS) \
 	-DACCESSX_PIXMAPS_DIR=\""$(datadir)/pixmaps/mate-accessx-status-applet"\" \
 	-DACCESSX_MENU_UI_DIR=\""$(uidir)"\"
 
@@ -15,6 +16,7 @@ accessx_status_applet_SOURCES = \
 accessx_status_applet_LDADD = \
 	$(MATE_APPLETS4_LIBS) \
 	$(MATEDESKTOP_LIBS) \
+	$(GIO_LIBS) \
 	$(X_LIBS)
 
 appletdir       = $(datadir)/mate-panel/applets

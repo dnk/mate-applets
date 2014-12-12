@@ -13,28 +13,6 @@
 #include <atk/atkrelation.h>
 #include <gtk/gtk.h>
 
-#define CHARPICK_STOCK_EDIT "charpick-stock-edit"
-
-void
-register_stock_for_edit (void)
-{
-  static gboolean registered = FALSE;
-  if (!registered)
-  {
-    GtkIconFactory *factory;
-    GtkIconSet     *icons;
-                                                                                
-    static const GtkStockItem edit_item [] = {
-           { CHARPICK_STOCK_EDIT, N_("_Edit"), 0, 0, GETTEXT_PACKAGE },
-    };
-    icons = gtk_icon_factory_lookup_default (GTK_STOCK_PREFERENCES);
-    factory = gtk_icon_factory_new ();
-    gtk_icon_factory_add (factory, CHARPICK_STOCK_EDIT, icons);
-    gtk_icon_factory_add_default (factory);
-    gtk_stock_add_static (edit_item, 1);
-    registered = TRUE;
-  }
-}
 
 #if 0
 static void
@@ -506,14 +484,14 @@ static void default_chars_frame_create(charpick_data *curr_data)
   vbox2 = gtk_vbox_new (FALSE, 6);
 #endif
   gtk_box_pack_start (GTK_BOX (hbox), vbox2, FALSE, FALSE, 0);
-  button = gtk_button_new_from_stock (GTK_STOCK_ADD);
+  button = gtk_button_new_with_mnemonic (_("_Add"));
   gtk_box_pack_start (GTK_BOX (vbox2), button, FALSE, FALSE, 0);
   g_signal_connect (G_OBJECT (button), "clicked",
   			     G_CALLBACK (add_palette), curr_data);
   set_access_namedesc (button, _("Add button"),
 				         _("Click to add a new palette"));
  
-  button = gtk_button_new_from_stock (CHARPICK_STOCK_EDIT);
+  button = gtk_button_new_with_mnemonic (_("_Edit"));
   gtk_box_pack_start (GTK_BOX (vbox2), button, FALSE, FALSE, 0);
   g_signal_connect (G_OBJECT (button), "clicked",
   			     G_CALLBACK (edit_palette), curr_data);
@@ -521,7 +499,7 @@ static void default_chars_frame_create(charpick_data *curr_data)
   set_access_namedesc (button, _("Edit button"),
 				         _("Click to edit the selected palette"));
   
-  button = gtk_button_new_from_stock (GTK_STOCK_DELETE);
+  button = gtk_button_new_with_mnemonic (_("_Delete"));
   gtk_box_pack_start (GTK_BOX (vbox2), button, FALSE, FALSE, 0);
   g_signal_connect (G_OBJECT (button), "clicked",
   			     G_CALLBACK (delete_palette), curr_data);
