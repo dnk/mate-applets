@@ -25,6 +25,8 @@
 #include <glib/gi18n.h>
 #include <glib-object.h>
 #include <gtk/gtk.h>
+#include <gio/gio.h>
+#include <gio/gdesktopappinfo.h>
 #include <gdk/gdkkeysyms.h>
 #include <gdk/gdkx.h>
 #include <mate-panel-applet.h>
@@ -177,6 +179,9 @@ static void help_cb(GtkAction* action, AccessxStatusApplet* sapplet)
 static void dialog_cb(GtkAction* action, AccessxStatusApplet* sapplet)
 {
 	GError* error = NULL;
+	GdkScreen *screen;
+	GdkAppLaunchContext *launch_context;
+	GAppInfo *appinfo;
 
 	if (sapplet->error_type != ACCESSX_STATUS_ERROR_NONE)
 	{
@@ -185,18 +190,18 @@ static void dialog_cb(GtkAction* action, AccessxStatusApplet* sapplet)
 	}
 
 
-	GdkScreen* screen = gtk_widget_get_screen(GTK_WIDGET(sapplet->applet));
-	/* This is the old way of calling things, we try this just in case
-	 * we're in a mixed-version enviroment. It has to be tried first,
-	 * because the new command doesn't fail in a way useful to
-	 * gdk_spawn_command_line_on_screen and its error parameter. */
-	gdk_spawn_command_line_on_screen(screen, "mate-accessibility-keyboard-properties", &error);
+	screen = gtk_widget_get_screen (GTK_WIDGET (sapplet->applet));
+	appinfo = g_app_info_create_from_commandline ("mate-keyboard-properties --a11y",
+						      _("Open the keyboard preferences dialog"),
+						      G_APP_INFO_CREATE_NONE,
+						      &error);
 
-	if (error != NULL)
-	{
-		g_error_free(error);
-		error = NULL;
-		gdk_spawn_command_line_on_screen(screen, "mate-keyboard-properties --a11y", &error);
+	if (!error) {
+		launch_context = gdk_app_launch_context_new ();
+		gdk_app_launch_context_set_screen (launch_context, screen);
+		g_app_info_launch (appinfo, NULL, G_APP_LAUNCH_CONTEXT (launch_context), &error);
+
+		g_object_unref (launch_context);
 	}
 
 	if (error != NULL)
@@ -211,6 +216,8 @@ static void dialog_cb(GtkAction* action, AccessxStatusApplet* sapplet)
 		gtk_widget_show(dialog);
 		g_error_free(error);
 	}
+
+	g_object_unref (appinfo);
 }
 
 static const GtkActionEntry accessx_status_applet_menu_actions[] = {
@@ -393,7 +400,6 @@ static GdkPixbuf* accessx_status_applet_get_glyph_pixbuf(AccessxStatusApplet* sa
 {
 	GdkPixbuf* glyph_pixbuf;
 #if GTK_CHECK_VERSION (3, 0, 0)
-	cairo_t *cr;
 	cairo_surface_t *surface;
 #else
 	GdkPixbuf *alpha_pixbuf;
@@ -402,57 +408,35 @@ static GdkPixbuf* accessx_status_applet_get_glyph_pixbuf(AccessxStatusApplet* sa
 	PangoLayout* layout;
 	PangoRectangle ink, logic;
 	PangoContext* pango_context;
-#if !GTK_CHECK_VERSION (3, 0, 0)
-	GdkColormap* cmap;
-	GdkGC* gc;
-	GdkVisual* visual = gdk_visual_get_best();
-#endif
 	gint w = gdk_pixbuf_get_width(base);
 	gint h = gdk_pixbuf_get_height(base);
+	cairo_t *cr;
+
 #if GTK_CHECK_VERSION (3, 0, 0)
 	surface = gdk_window_create_similar_surface (gdk_get_default_root_window (), CAIRO_CONTENT_COLOR_ALPHA, w, h);
 #else
-	pixmap = gdk_pixmap_new(NULL, gdk_pixbuf_get_width(base), gdk_pixbuf_get_height(base), visual->depth);
+	pixmap = gdk_pixmap_new(gdk_get_default_root_window (),w, h, -1);
 #endif
 	pango_context = gtk_widget_get_pango_context(widget);
 	layout = pango_layout_new(pango_context);
 	pango_layout_set_alignment(layout, PANGO_ALIGN_CENTER);
 	pango_layout_set_text(layout, glyphstring, -1);
+
 #if GTK_CHECK_VERSION (3, 0, 0)
 	cr = cairo_create (surface);
+#else
+	cr = gdk_cairo_create (pixmap);
+#endif
 	gdk_cairo_set_source_color (cr, bg);
 	cairo_paint (cr);
 	gdk_cairo_set_source_color (cr, fg);
-#else
-	gc = gdk_gc_new(GDK_DRAWABLE(pixmap));
-	cmap = gdk_drawable_get_colormap(GDK_DRAWABLE(pixmap));
 
-	if (!cmap)
-	{
-		cmap = gdk_colormap_new(visual, FALSE);
-		gdk_drawable_set_colormap(GDK_DRAWABLE(pixmap), cmap);
-	}
-	else
-	{
-		g_object_ref(cmap);
-	}
-
-	gdk_colormap_alloc_color(cmap, fg, FALSE, TRUE);
-	gdk_colormap_alloc_color(cmap, bg, FALSE, TRUE);
-	gdk_gc_set_foreground(gc, bg);
-	gdk_draw_rectangle(pixmap, gc, True, 0, 0, w, h);
-	gdk_gc_set_foreground(gc, fg);
-	gdk_gc_set_background(gc, bg);
-	gdk_gc_set_function(gc, GDK_COPY);
-#endif
 	pango_layout_get_pixel_extents(layout, &ink, &logic);
-#if GTK_CHECK_VERSION (3, 0, 0)
+
 	cairo_move_to (cr, (w - ink.x - ink.width)/2, (h - ink.y - ink.height)/2);
 	pango_cairo_show_layout (cr, layout);
 	cairo_destroy (cr);
-#else
-	gdk_draw_layout(GDK_DRAWABLE(pixmap), gc, (w - ink.x - ink.width) / 2, (h - ink.y - ink.height) / 2, layout);
-#endif
+
 	g_object_unref(layout);
 #if GTK_CHECK_VERSION (3, 0, 0)
 	glyph_pixbuf = gdk_pixbuf_get_from_surface (surface, 0, 0, w, h);
@@ -460,12 +444,10 @@ static GdkPixbuf* accessx_status_applet_get_glyph_pixbuf(AccessxStatusApplet* sa
 
 	return glyph_pixbuf;
 #else
-	glyph_pixbuf = gdk_pixbuf_get_from_drawable(NULL, pixmap, cmap, 0, 0, 0, 0, w, h);
+	glyph_pixbuf = gdk_pixbuf_get_from_drawable(NULL, pixmap, NULL, 0, 0, 0, 0, w, h);
 	g_object_unref(pixmap);
 	alpha_pixbuf = gdk_pixbuf_add_alpha(glyph_pixbuf, TRUE, bg->red >> 8, bg->green >> 8, bg->blue >> 8);
 	g_object_unref(G_OBJECT(glyph_pixbuf));
-	g_object_unref(G_OBJECT(cmap));
-	g_object_unref(G_OBJECT(gc));
 
 	return alpha_pixbuf;
 #endif
@@ -549,7 +531,7 @@ static GdkPixbuf* accessx_status_applet_bouncekeys_image(AccessxStatusApplet* sa
 {
 	GtkStyle* style;
 	GdkColor fg, bg;
-	GdkPixbuf* icon_base;
+	GdkPixbuf* icon_base = NULL;
 	GdkPixbuf* tmp_pixbuf;
 	/* Note to translators: the first letter of the alphabet, not the indefinite article */
 	gchar* glyphstring = N_("a");
@@ -1123,6 +1105,9 @@ static AccessxStatusApplet* create_applet(MatePanelApplet* applet)
 		stickyfoo = gtk_hbox_new(TRUE, 0);
 	}
 
+#if GTK_CHECK_VERSION (3, 0, 0)
+	gtk_box_set_homogeneous (GTK_BOX (stickyfoo), TRUE);
+#endif
 	large_toolbar_pixels = 24; /* FIXME */
 
 	if (mate_panel_applet_get_size(sapplet->applet) >= large_toolbar_pixels)
@@ -1212,7 +1197,9 @@ static void accessx_status_applet_reorient(GtkWidget* widget, MatePanelAppletOri
 		box = gtk_hbox_new(FALSE, 0);
 		stickyfoo = gtk_hbox_new(TRUE, 0);
 	}
-
+#if GTK_CHECK_VERSION (3, 0, 0)
+	gtk_box_set_homogeneous (GTK_BOX (stickyfoo), TRUE);
+#endif
 	accessx_status_applet_layout_box(sapplet, box, stickyfoo);
 }
 
