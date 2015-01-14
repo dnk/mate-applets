@@ -13,28 +13,6 @@
 #include <atk/atkrelation.h>
 #include <gtk/gtk.h>
 
-#define CHARPICK_STOCK_EDIT "charpick-stock-edit"
-
-void
-register_stock_for_edit (void)
-{
-  static gboolean registered = FALSE;
-  if (!registered)
-  {
-    GtkIconFactory *factory;
-    GtkIconSet     *icons;
-                                                                                
-    static const GtkStockItem edit_item [] = {
-           { CHARPICK_STOCK_EDIT, N_("_Edit"), 0, 0, GETTEXT_PACKAGE },
-    };
-    icons = gtk_icon_factory_lookup_default (GTK_STOCK_PREFERENCES);
-    factory = gtk_icon_factory_new ();
-    gtk_icon_factory_add (factory, CHARPICK_STOCK_EDIT, icons);
-    gtk_icon_factory_add_default (factory);
-    gtk_stock_add_static (edit_item, 1);
-    registered = TRUE;
-  }
-}
 
 #if 0
 static void
