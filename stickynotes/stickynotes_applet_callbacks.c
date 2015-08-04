@@ -86,8 +86,8 @@ stickynote_toggle_notes_visible ()
 /* Applet Callback : Mouse button press on the applet. */
 gboolean
 applet_button_cb (GtkWidget         *widget,
-		  GdkEventButton    *event,
-		  StickyNotesApplet *applet)
+                  GdkEventButton    *event,
+                  StickyNotesApplet *applet)
 {
 	if (event->type == GDK_2BUTTON_PRESS)
 	{
@@ -106,8 +106,8 @@ applet_button_cb (GtkWidget         *widget,
 /* Applet Callback : Keypress on the applet. */
 gboolean
 applet_key_cb (GtkWidget         *widget,
-	       GdkEventKey       *event,
-	       StickyNotesApplet *applet)
+               GdkEventKey       *event,
+               StickyNotesApplet *applet)
 {
 	switch (event->keyval)
 	{
@@ -164,8 +164,9 @@ void install_check_click_on_desktop (void)
 	}
 
 	/* Access the desktop window. desktop_window is the root window for the
-	* default screen, so we know using gdk_display_get_default() is correct. */
-	window = gdk_x11_window_foreign_new_for_display (gdk_display_get_default (), desktop_window);
+	 * default screen, so we know using gdk_display_get_default() is correct. */
+	window = gdk_x11_window_foreign_new_for_display (gdk_display_get_default (),
+	                                                 desktop_window);
 
 	/* It may contain an atom to tell us which other window to monitor */
 	user_time_window = gdk_x11_get_xatom_by_name ("_NET_WM_USER_TIME_WINDOW");
@@ -180,20 +181,21 @@ void install_check_click_on_desktop (void)
 		gulong bytes;
 
 		/* We only use this extra property if the actual user-time property's missing */
-		XGetWindowProperty(GDK_DISPLAY_XDISPLAY(gdk_display_get_default()), desktop_window, user_time,
+		XGetWindowProperty(GDK_DISPLAY_XDISPLAY(gdk_window_get_display(window)), desktop_window, user_time,
 					0, 4, False, AnyPropertyType, &actual_type, &actual_format,
 					&nitems, &bytes, (unsigned char **)&data );
 		if (actual_type == None)
 		{
 			/* No user-time property, so look for the user-time-window */
-			XGetWindowProperty(GDK_DISPLAY_XDISPLAY(gdk_display_get_default()), desktop_window, user_time_window,
+			XGetWindowProperty(GDK_DISPLAY_XDISPLAY(gdk_window_get_display(window)), desktop_window, user_time_window,
 					0, 4, False, AnyPropertyType, &actual_type, &actual_format,
 					&nitems, &bytes, (unsigned char **)&data );
 			if (actual_type != None)
 			{
 				/* We have another window to monitor */
 				desktop_window = *data;
-				window = gdk_x11_window_foreign_new_for_display (gdk_window_get_display (window), desktop_window);
+				window = gdk_x11_window_foreign_new_for_display (gdk_window_get_display (window),
+				                                                 desktop_window);
 			}
 		}
 	}
@@ -206,8 +208,6 @@ void install_check_click_on_desktop (void)
 void applet_change_orient_cb(MatePanelApplet *mate_panel_applet, MatePanelAppletOrient orient, StickyNotesApplet *applet)
 {
 	applet->panel_orient = orient;
-
-	return;
 }
 
 /* Applet Callback : Resize the applet. */
@@ -228,55 +228,6 @@ void applet_size_allocate_cb(GtkWidget *widget, GtkAllocation *allocation, Stick
 	return;
 }
 
-/* Applet Callback : Change the applet background. */
-void
-applet_change_bg_cb (MatePanelApplet *mate_panel_applet,
-		     MatePanelAppletBackgroundType type,
-		     GdkColor *color,
-#if GTK_CHECK_VERSION (3, 0, 0)
-		     cairo_pattern_t *pattern,
-#else
-		     GdkPixmap *pixmap,
-#endif
-		     StickyNotesApplet *applet)
-{
-#if !GTK_CHECK_VERSION (3, 0, 0)
-	/* Taken from TrashApplet */
-	GtkRcStyle *rc_style;
-	GtkStyle *style;
-
-	if (!applet) g_print ("arrg, no applet!\n");
-
-	/* reset style */
-	gtk_widget_set_style (GTK_WIDGET (applet->w_applet), NULL);
-	rc_style = gtk_rc_style_new ();
-	gtk_widget_modify_style (GTK_WIDGET (applet->w_applet), rc_style);
-	g_object_unref (rc_style);
-
-	switch (type)
-	{
-		case PANEL_NO_BACKGROUND:
-			break;
-		case PANEL_COLOR_BACKGROUND:
-			gtk_widget_modify_bg (GTK_WIDGET (applet->w_applet),
-					GTK_STATE_NORMAL, color);
-			break;
-		case PANEL_PIXMAP_BACKGROUND:
-			style = gtk_style_copy (
-					gtk_widget_get_style (GTK_WIDGET (applet->w_applet)));
-			if (style->bg_pixmap[GTK_STATE_NORMAL])
-				g_object_unref (
-					style->bg_pixmap[GTK_STATE_NORMAL]);
-			style->bg_pixmap[GTK_STATE_NORMAL] = g_object_ref (
-					pixmap);
-			gtk_widget_set_style (
-					GTK_WIDGET (applet->w_applet), style);
-			g_object_unref (style);
-			break;
-	}
-#endif
-}
-
 /* Applet Callback : Deletes the applet. */
 void applet_destroy_cb (MatePanelApplet *mate_panel_applet, StickyNotesApplet *applet)
 {
@@ -294,15 +245,13 @@ void applet_destroy_cb (MatePanelApplet *mate_panel_applet, StickyNotesApplet *a
 		stickynotes->applets = g_list_remove (stickynotes->applets, applet);
 
 	if (stickynotes->applets == NULL) {
-               notes = stickynotes->notes;
-               while (notes) {
-                       StickyNote *note = notes->data;
-                       stickynote_free (note);
-                       notes = g_list_next (notes);
-               }
+		notes = stickynotes->notes;
+		while (notes) {
+			StickyNote *note = notes->data;
+			stickynote_free (note);
+			notes = g_list_next (notes);
+		}
 	}
-
-
 }
 
 /* Destroy all response Callback: Callback for the destroy all dialog */
@@ -346,7 +295,7 @@ void menu_destroy_all_cb(GtkAction *action, StickyNotesApplet *applet)
 
 	if (applet->destroy_all_dialog != NULL) {
 		gtk_window_set_screen (GTK_WINDOW (applet->destroy_all_dialog),
-				       gtk_widget_get_screen (GTK_WIDGET (applet->w_applet)));
+		                       gtk_widget_get_screen (GTK_WIDGET (applet->w_applet)));
 
 		gtk_window_present (GTK_WINDOW (applet->destroy_all_dialog));
 		return;
@@ -357,11 +306,11 @@ void menu_destroy_all_cb(GtkAction *action, StickyNotesApplet *applet)
 	g_object_unref (builder);
 
 	g_signal_connect (applet->destroy_all_dialog, "response",
-			  G_CALLBACK (destroy_all_response_cb),
-			  applet);
+	                  G_CALLBACK (destroy_all_response_cb),
+	                  applet);
 
 	gtk_window_set_screen (GTK_WINDOW (applet->destroy_all_dialog),
-			gtk_widget_get_screen (applet->w_applet));
+	                       gtk_widget_get_screen (applet->w_applet));
 
 	gtk_widget_show_all (applet->destroy_all_dialog);
 }
@@ -388,7 +337,7 @@ void menu_help_cb(GtkAction *action, StickyNotesApplet *applet)
 {
 	GError *error = NULL;
 	gtk_show_uri (gtk_widget_get_screen (GTK_WIDGET (applet->w_applet)),
-			"help:mate-stickynotes_applet",
+			"help:mate-stickynotes-applet",
 			gtk_get_current_event_time (),
 			&error);
 	if (error) {
@@ -469,23 +418,31 @@ preferences_save_cb (gpointer data)
 void
 preferences_color_cb (GtkWidget *button, gpointer data)
 {
-	GdkColor color, font_color;
 	char *color_str, *font_color_str;
 
-	gtk_color_button_get_color (
-			GTK_COLOR_BUTTON (stickynotes->w_prefs_color), &color);
-	gtk_color_button_get_color (
-			GTK_COLOR_BUTTON (stickynotes->w_prefs_font_color),
-			&font_color);
+#if GTK_CHECK_VERSION (3, 0, 0)
+	GdkRGBA color, font_color;
+
+	gtk_color_button_get_rgba (GTK_COLOR_BUTTON (stickynotes->w_prefs_color), &color);
+	gtk_color_button_get_rgba (GTK_COLOR_BUTTON (stickynotes->w_prefs_font_color), &font_color);
+
+	color_str = gdk_rgba_to_string (&color);
+	font_color_str = gdk_rgba_to_string (&font_color);
+#else
+	GdkColor color, font_color;
+
+	gtk_color_button_get_color (GTK_COLOR_BUTTON (stickynotes->w_prefs_color), &color);
+	gtk_color_button_get_color (GTK_COLOR_BUTTON (stickynotes->w_prefs_font_color), &font_color);
 
 	color_str = g_strdup_printf ("#%.2x%.2x%.2x",
-			color.red / 256,
-			color.green / 256,
-			color.blue / 256);
+	                             color.red   / 256,
+	                             color.green / 256,
+	                             color.blue  / 256);
 	font_color_str = g_strdup_printf ("#%.2x%.2x%.2x",
-			font_color.red / 256,
-			font_color.green / 256,
-			font_color.blue / 256);
+	                                  font_color.red   / 256,
+	                                  font_color.green / 256,
+	                                  font_color.blue  / 256);
+#endif
 
 	g_settings_set_string (stickynotes->settings, "default-color", color_str);
 	g_settings_set_string (stickynotes->settings, "default-font-color", font_color_str);
@@ -518,7 +475,7 @@ void preferences_apply_cb(GSettings *settings, gchar *key, gpointer data)
 				gtk_window_stick (GTK_WINDOW (note->w_window));
 			}
 		else
-			for (l= stickynotes->notes; l; l = l->next)
+			for (l = stickynotes->notes; l; l = l->next)
 			{
 				note = l->data;
 				gtk_window_unstick (GTK_WINDOW (
@@ -581,7 +538,7 @@ void preferences_response_cb(GtkWidget *dialog, gint response, gpointer data)
 	if (response == GTK_RESPONSE_HELP) {
 		GError *error = NULL;
 		gtk_show_uri (gtk_widget_get_screen (GTK_WIDGET (dialog)),
-				"help:mate-stickynotes_applet/stickynotes-advanced-settings",
+				"help:mate-stickynotes-applet/stickynotes-advanced-settings",
 				gtk_get_current_event_time (),
 				&error);
 		if (error) {

@@ -1,7 +1,7 @@
 dnl ***************************************************************************
 dnl *** configure.in for MATE-APPLETS                                      ***
 dnl ***************************************************************************
-AC_INIT(mate-applets, 1.9.1)
+AC_INIT(mate-applets, 1.10.3)
 AC_PREREQ(2.59)
 
 AC_CONFIG_HEADERS(config.h)
@@ -316,7 +316,7 @@ if test x$disable_battstat = xno; then
 	   ;;
        # list of supported OS cores that do not use libapm
        i386-*-freebsd*|*-*-netbsd*|*-*-openbsd*|*-*kfreebsd*-gnu)
-          if [ -n "${OS_SYS}" ]; then
+          if test -n "${OS_SYS}"; then
 	       ACPIINC="-I${OS_SYS}"
 	   else
 	       ACPIINC="-I/usr/src/sys"

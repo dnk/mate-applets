@@ -170,10 +170,8 @@ stickynotes_applet_init (MatePanelApplet *mate_panel_applet)
 	stickynotes_applet_init_prefs();
 
 	/* Watch GSettings values */
-	g_signal_connect (stickynotes->settings,
-			"changed",
-			G_CALLBACK (preferences_apply_cb),
-			NULL);
+	g_signal_connect (stickynotes->settings, "changed",
+	                  G_CALLBACK (preferences_apply_cb), NULL);
 
 	/* Max height for large notes*/
 	stickynotes->max_height = 0.8*gdk_screen_get_height( gdk_screen_get_default() );
@@ -404,10 +402,12 @@ StickyNotesApplet * stickynotes_applet_new(MatePanelApplet *mate_panel_applet)
 			G_CALLBACK(applet_size_allocate_cb), applet);
 	g_signal_connect(G_OBJECT(applet->w_applet), "change-orient",
 			G_CALLBACK(applet_change_orient_cb), applet);
-	g_signal_connect(G_OBJECT(applet->w_applet), "change_background",
-			G_CALLBACK(applet_change_bg_cb), applet);
 	g_signal_connect(G_OBJECT(applet->w_applet), "destroy",
 			G_CALLBACK(applet_destroy_cb), applet);
+
+#if !GTK_CHECK_VERSION (3, 0, 0)
+	mate_panel_applet_set_background_widget (mate_panel_applet, applet->w_applet);
+#endif
 
 	atk_obj = gtk_widget_get_accessible (applet->w_applet);
 	atk_object_set_name (atk_obj, _("Sticky Notes"));
@@ -452,10 +452,13 @@ stickynotes_applet_update_prefs (void)
 	gboolean sys_color, sys_font, sticky, force_default, desktop_hide;
 	char *font_str;
 	char *color_str, *font_color_str;
+#if GTK_CHECK_VERSION (3, 0, 0)
+	GdkRGBA color, font_color;
+#else
 	GdkColor color, font_color;
+#endif
 
 	width = g_settings_get_int (stickynotes->settings, "default-width");
-
 	width = MAX (width, 1);
 	height = g_settings_get_int (stickynotes->settings, "default-height");
 	height = MAX (height, 1);
@@ -464,9 +467,9 @@ stickynotes_applet_update_prefs (void)
 	sys_font = g_settings_get_boolean (stickynotes->settings, "use-system-font");
 	sticky = g_settings_get_boolean (stickynotes->settings, "sticky");
 	force_default = g_settings_get_boolean (stickynotes->settings, "force-default");
-	font_str = g_settings_get_string (stickynotes->settings, "default-font");
 	desktop_hide = g_settings_get_boolean (stickynotes->settings, "desktop-hide");
 
+	font_str = g_settings_get_string (stickynotes->settings, "default-font");
 	if (!font_str)
 	{
 		font_str = g_strdup ("Sans 10");
@@ -483,10 +486,15 @@ stickynotes_applet_update_prefs (void)
 		font_color_str = g_strdup ("#000000");
 	}
 
+#if GTK_CHECK_VERSION (3, 0, 0)
+	gdk_rgba_parse (&color, color_str);
+	gdk_rgba_parse (&font_color, font_color_str);
+#else
 	gdk_color_parse (color_str, &color);
-	g_free (color_str);
-
 	gdk_color_parse (font_color_str, &font_color);
+#endif
+
+	g_free (color_str);
 	g_free (font_color_str);
 
 	gtk_adjustment_set_value (stickynotes->w_prefs_width, width);
@@ -507,13 +515,15 @@ stickynotes_applet_update_prefs (void)
 			GTK_TOGGLE_BUTTON (stickynotes->w_prefs_desktop),
 			desktop_hide);
 
-	gtk_color_button_set_color (
-			GTK_COLOR_BUTTON (stickynotes->w_prefs_color), &color);
-	gtk_color_button_set_color (
-			GTK_COLOR_BUTTON (stickynotes->w_prefs_font_color),
-			&font_color);
-	gtk_font_button_set_font_name (
-			GTK_FONT_BUTTON (stickynotes->w_prefs_font), font_str);
+#if GTK_CHECK_VERSION (3, 0, 0)
+	gtk_color_button_set_rgba (GTK_COLOR_BUTTON (stickynotes->w_prefs_color), &color);
+	gtk_color_button_set_rgba (GTK_COLOR_BUTTON (stickynotes->w_prefs_font_color), &font_color);
+#else
+	gtk_color_button_set_color (GTK_COLOR_BUTTON (stickynotes->w_prefs_color), &color);
+	gtk_color_button_set_color (GTK_COLOR_BUTTON (stickynotes->w_prefs_font_color), &font_color);
+#endif
+
+	gtk_font_button_set_font_name (GTK_FONT_BUTTON (stickynotes->w_prefs_font), font_str);
 	g_free (font_str);
 
 	if (g_settings_is_writable (stickynotes->settings, "default-color"))

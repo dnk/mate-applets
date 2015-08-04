@@ -47,29 +47,29 @@ static void response_cb (GtkWidget *dialog, gint id, gpointer data);
 
 /* Based on a function found in wnck */
 static void
-set_icon_geometry  (GdkWindow *window,
-                  int        x,
-                  int        y,
-                  int        width,
-                  int        height)
+set_icon_geometry (GdkWindow *window,
+                   int        x,
+                   int        y,
+                   int        width,
+                   int        height)
 {
-      gulong data[4];
-      Display *dpy;
+	gulong data[4];
+	Display *dpy;
 
-      dpy = gdk_x11_display_get_xdisplay (gdk_window_get_display (window));
+	dpy = gdk_x11_display_get_xdisplay (gdk_window_get_display (window));
 
-      data[0] = x;
-      data[1] = y;
-      data[2] = width;
-      data[3] = height;
+	data[0] = x;
+	data[1] = y;
+	data[2] = width;
+	data[3] = height;
 
-      XChangeProperty (dpy,
-                       GDK_WINDOW_XID (window),
-                       gdk_x11_get_xatom_by_name_for_display (
-			       gdk_window_get_display (window),
-			       "_NET_WM_ICON_GEOMETRY"),
-		       XA_CARDINAL, 32, PropModeReplace,
-                       (guchar *)&data, 4);
+	XChangeProperty (dpy,
+	                 GDK_WINDOW_XID (window),
+	                 gdk_x11_get_xatom_by_name_for_display (
+	                     gdk_window_get_display (window),
+	                     "_NET_WM_ICON_GEOMETRY"),
+	                 XA_CARDINAL, 32, PropModeReplace,
+	                 (guchar *)&data, 4);
 }
 
 /* Called when a timeout occurs.  */
@@ -326,8 +326,6 @@ void stickynote_free(StickyNote *note)
 /* Change the sticky note title and color */
 void stickynote_change_properties (StickyNote *note)
 {
-	GdkColor color;
-	GdkColor font_color;
 	char *color_str = NULL;
 
 	gtk_entry_set_text(GTK_ENTRY(note->w_entry),
@@ -345,10 +343,16 @@ void stickynote_change_properties (StickyNote *note)
 
 	if (color_str)
 	{
+#if GTK_CHECK_VERSION (3, 0, 0)
+		GdkRGBA color;
+		gdk_rgba_parse (&color, color_str);
+		gtk_color_button_set_rgba (GTK_COLOR_BUTTON (note->w_color), &color);
+#else
+		GdkColor color;
 		gdk_color_parse (color_str, &color);
+		gtk_color_button_set_color (GTK_COLOR_BUTTON (note->w_color), &color);
+#endif
 		g_free (color_str);
-		gtk_color_button_set_color (GTK_COLOR_BUTTON (note->w_color),
-				    &color);
 	}
 
 	if (note->font_color)
@@ -360,10 +364,16 @@ void stickynote_change_properties (StickyNote *note)
 
 	if (color_str)
 	{
+#if GTK_CHECK_VERSION (3, 0, 0)
+		GdkRGBA font_color;
+		gdk_rgba_parse (&font_color, color_str);
+		gtk_color_button_set_rgba (GTK_COLOR_BUTTON (note->w_font_color), &font_color);
+#else
+		GdkColor font_color;
 		gdk_color_parse (color_str, &font_color);
+		gtk_color_button_set_color (GTK_COLOR_BUTTON (note->w_font_color), &font_color);
+#endif
 		g_free (color_str);
-		gtk_color_button_set_color (GTK_COLOR_BUTTON (note->w_font_color),
-				    &font_color);
 	}
 
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(note->w_def_font),
@@ -382,7 +392,7 @@ response_cb (GtkWidget *dialog, gint id, gpointer data)
 {
         if (id == GTK_RESPONSE_HELP)
 		gtk_show_uri (gtk_widget_get_screen (GTK_WIDGET (dialog)),
-				"help:mate-stickynotes_applet/stickynotes-settings-individual",
+				"help:mate-stickynotes-applet/stickynotes-settings-individual",
 				gtk_get_current_event_time (),
 				NULL);
         else if (id == GTK_RESPONSE_CLOSE)
@@ -481,34 +491,39 @@ stickynote_set_color (StickyNote  *note,
 
 	/* Do not use custom colors if "use_system_color" is enabled */
 	if (color_str_actual) {
-		/* Custom colors */
-		GdkColor colors[6];
-#if !GTK_CHECK_VERSION (3, 0, 0)
-		gboolean success[6];
+#if GTK_CHECK_VERSION (3, 0, 0)
+		GdkRGBA color;
+		gdk_rgba_parse (&color, color_str_actual);
 #endif
-
 		/* Make 4 shades of the color, getting darker from the
 		 * original, plus black and white */
+		GdkColor colors[6];
 		gint i;
 
 		for (i = 0; i <= 3; i++)
 		{
 			gdk_color_parse (color_str_actual, &colors[i]);
-
+#if GTK_CHECK_VERSION (3, 0, 0)
+			colors[i].red = (color.red * (10 - i)) / 10;
+			colors[i].green = (color.green * (10 - i)) / 10;
+			colors[i].blue = (color.blue * (10 - i)) / 10;
+#else
 			colors[i].red = (colors[i].red * (10 - i)) / 10;
 			colors[i].green = (colors[i].green * (10 - i)) / 10;
 			colors[i].blue = (colors[i].blue * (10 - i)) / 10;
+#endif
 		}
+
 		gdk_color_parse ("black", &colors[4]);
 		gdk_color_parse ("white", &colors[5]);
 
 #if !GTK_CHECK_VERSION (3, 0, 0)
-		/* Allocate these colors */
-		gdk_colormap_alloc_colors (gtk_widget_get_colormap (
-					note->w_window),
-				colors, 6, FALSE, TRUE, success);
-#endif
+		gboolean success[6];
 
+		/* Allocate these colors */
+		gdk_colormap_alloc_colors (gtk_widget_get_colormap (note->w_window),
+		                           colors, 6, FALSE, TRUE, success);
+#endif
 		/* Apply colors to style */
 		rc_style->base[GTK_STATE_NORMAL] = colors[0];
 		rc_style->bg[GTK_STATE_PRELIGHT] = colors[1];
@@ -520,7 +535,6 @@ stickynote_set_color (StickyNote  *note,
 			GTK_RC_BG | GTK_RC_BASE;
 		rc_style->color_flags[GTK_STATE_ACTIVE] = GTK_RC_BG;
 	}
-
 	else {
 		rc_style->color_flags[GTK_STATE_PRELIGHT] = 0;
 		rc_style->color_flags[GTK_STATE_NORMAL] = 0;
@@ -545,7 +559,16 @@ stickynote_set_color (StickyNote  *note,
 	{
 		GdkColor font_color;
 
+#if GTK_CHECK_VERSION (3, 0, 0)
+		GdkRGBA color;
+
+		gdk_rgba_parse (&color, font_color_str_actual);
+		font_color.red = color.red;
+		font_color.green = color.green;
+		font_color.blue = color.blue;
+#else
 		gdk_color_parse (font_color_str_actual, &font_color);
+#endif
 
 		gtk_widget_modify_text (note->w_window,
 				GTK_STATE_NORMAL, &font_color);
@@ -554,7 +577,7 @@ stickynote_set_color (StickyNote  *note,
 		gtk_widget_modify_text (note->w_body,
 				GTK_STATE_NORMAL, &font_color);
 		gtk_widget_modify_text (note->w_body,
-				GTK_STATE_NORMAL, &font_color);
+				GTK_STATE_PRELIGHT, &font_color);
 	}
 	else
 	{
@@ -565,7 +588,7 @@ stickynote_set_color (StickyNote  *note,
 		gtk_widget_modify_text (note->w_body,
 				GTK_STATE_NORMAL, NULL);
 		gtk_widget_modify_text (note->w_body,
-				GTK_STATE_NORMAL, NULL);
+				GTK_STATE_PRELIGHT, NULL);
 	}
 
 	if (color_str_actual)
@@ -854,11 +877,11 @@ stickynotes_save_now (void)
 void
 stickynotes_save (void)
 {
-  /* If a save isn't already schedules, save everything a minute from now. */
-  if (!save_scheduled) {
-    g_timeout_add_seconds (60, (GSourceFunc) stickynotes_save_now, NULL);
-    save_scheduled = TRUE;
-  }
+	/* If a save isn't already scheduled, save everything a minute from now. */
+	if (!save_scheduled) {
+		g_timeout_add_seconds (60, (GSourceFunc) stickynotes_save_now, NULL);
+		save_scheduled = TRUE;
+	}
 }
 
 /* Load all sticky notes from an XML configuration file */
@@ -872,9 +895,10 @@ stickynotes_load (GdkScreen *screen)
 	GList *new_notes, *tmp1;  /* Lists of StickyNote*'s */
 	GList *new_nodes; /* Lists of xmlNodePtr's */
 	int x, y, w, h;
+
 	/* The XML file is $HOME/.config/mate/stickynotes-applet, most probably */
 	{
-			gchar* file = g_build_filename(g_get_user_config_dir(), "mate", "stickynotes-applet.xml", NULL);
+		gchar* file = g_build_filename(g_get_user_config_dir(), "mate", "stickynotes-applet.xml", NULL);
 
 		if (g_file_test(file, G_FILE_TEST_EXISTS))
 		{
@@ -997,11 +1021,11 @@ stickynotes_load (GdkScreen *screen)
 
 			/* Retrieve and set the font of the note */
 			{
-				gchar *font_str = (gchar *)xmlGetProp(node, XML_CHAR ("font"));
+				gchar *font_str = (gchar *)xmlGetProp (node, XML_CHAR ("font"));
 				if (font_str)
 					stickynote_set_font (note, font_str,
 							TRUE);
-				g_free(font_str);
+				g_free (font_str);
 			}
 
 			/* Retrieve the workspace */
