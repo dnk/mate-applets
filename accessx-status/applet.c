@@ -61,42 +61,42 @@ typedef struct {
 } AppletStockIcon;
 
 static AppletStockIcon stock_icons[] = {
-	{ACCESSX_APPLET, "ax-applet.png", GTK_STATE_NORMAL, True},
-	{ACCESSX_BASE_ICON, "ax-key-base.png", GTK_STATE_NORMAL, True},
-	{ACCESSX_BASE_ICON, "ax-key-none.png", GTK_STATE_INSENSITIVE, False},
-	{ACCESSX_BASE_ICON, "ax-key-inverse.png", GTK_STATE_SELECTED, False},
-	{ACCESSX_ACCEPT_BASE, "ax-key-yes.png", GTK_STATE_NORMAL, True},
-	{ACCESSX_REJECT_BASE, "ax-key-no.png", GTK_STATE_NORMAL, True},
-	{MOUSEKEYS_BASE_ICON, "mousekeys-base.png", GTK_STATE_NORMAL, True},
-	{MOUSEKEYS_BUTTON_LEFT, "mousekeys-pressed-left.png", GTK_STATE_NORMAL, True},
-	{MOUSEKEYS_BUTTON_MIDDLE, "mousekeys-pressed-middle.png", GTK_STATE_NORMAL, True},
-	{MOUSEKEYS_BUTTON_RIGHT, "mousekeys-pressed-right.png", GTK_STATE_NORMAL, True},
-	{MOUSEKEYS_DOT_LEFT, "mousekeys-default-left.png", GTK_STATE_NORMAL, True},
-	{MOUSEKEYS_DOT_MIDDLE, "mousekeys-default-middle.png", GTK_STATE_NORMAL, True},
-	{MOUSEKEYS_DOT_RIGHT, "mousekeys-default-right.png", GTK_STATE_NORMAL, True},
-	{SHIFT_KEY_ICON, "sticky-shift-latched.png", GTK_STATE_NORMAL, False},
-	{SHIFT_KEY_ICON, "sticky-shift-locked.png", GTK_STATE_SELECTED, False},
-	{SHIFT_KEY_ICON, "sticky-shift-none.png", GTK_STATE_INSENSITIVE, True},
-	{CONTROL_KEY_ICON, "sticky-ctrl-latched.png", GTK_STATE_NORMAL, False},
-	{CONTROL_KEY_ICON, "sticky-ctrl-locked.png", GTK_STATE_SELECTED, False},
-	{CONTROL_KEY_ICON, "sticky-ctrl-none.png", GTK_STATE_INSENSITIVE, True},
-	{ALT_KEY_ICON, "sticky-alt-latched.png", GTK_STATE_NORMAL, False},
-	{ALT_KEY_ICON, "sticky-alt-locked.png", GTK_STATE_SELECTED, False},
-	{ALT_KEY_ICON, "sticky-alt-none.png", GTK_STATE_INSENSITIVE, True},
-	{META_KEY_ICON, "sticky-meta-latched.png", GTK_STATE_NORMAL, False},
-	{META_KEY_ICON, "sticky-meta-locked.png", GTK_STATE_SELECTED, False},
-	{META_KEY_ICON, "sticky-meta-none.png", GTK_STATE_INSENSITIVE, True},
-	{SUPER_KEY_ICON, "sticky-super-latched.png", GTK_STATE_NORMAL, False},
-	{SUPER_KEY_ICON, "sticky-super-locked.png", GTK_STATE_SELECTED, False},
-	{SUPER_KEY_ICON, "sticky-super-none.png", GTK_STATE_INSENSITIVE, True},
-	{HYPER_KEY_ICON, "sticky-hyper-latched.png", GTK_STATE_NORMAL, False},
-	{HYPER_KEY_ICON, "sticky-hyper-locked.png", GTK_STATE_SELECTED, False},
-	{HYPER_KEY_ICON, "sticky-hyper-none.png", GTK_STATE_INSENSITIVE, True},
-	{SLOWKEYS_IDLE_ICON, "ax-slowkeys.png", GTK_STATE_NORMAL, True},
-	{SLOWKEYS_PENDING_ICON, "ax-slowkeys-pending.png", GTK_STATE_NORMAL, True},
-	{SLOWKEYS_ACCEPT_ICON, "ax-slowkeys-yes.png", GTK_STATE_NORMAL, True},
-	{SLOWKEYS_REJECT_ICON, "ax-slowkeys-no.png", GTK_STATE_NORMAL, True},
-	{BOUNCEKEYS_ICON, "ax-bouncekeys.png", GTK_STATE_NORMAL, True}
+	{ACCESSX_APPLET, "mate-ax-applet.png", GTK_STATE_NORMAL, True},
+	{ACCESSX_BASE_ICON, "mate-ax-key-base.png", GTK_STATE_NORMAL, True},
+	{ACCESSX_BASE_ICON, "mate-ax-key-none.png", GTK_STATE_INSENSITIVE, False},
+	{ACCESSX_BASE_ICON, "mate-ax-key-inverse.png", GTK_STATE_SELECTED, False},
+	{ACCESSX_ACCEPT_BASE, "mate-ax-key-yes.png", GTK_STATE_NORMAL, True},
+	{ACCESSX_REJECT_BASE, "mate-ax-key-no.png", GTK_STATE_NORMAL, True},
+	{MOUSEKEYS_BASE_ICON, "mate-mousekeys-base.png", GTK_STATE_NORMAL, True},
+	{MOUSEKEYS_BUTTON_LEFT, "mate-mousekeys-pressed-left.png", GTK_STATE_NORMAL, True},
+	{MOUSEKEYS_BUTTON_MIDDLE, "mate-mousekeys-pressed-middle.png", GTK_STATE_NORMAL, True},
+	{MOUSEKEYS_BUTTON_RIGHT, "mate-mousekeys-pressed-right.png", GTK_STATE_NORMAL, True},
+	{MOUSEKEYS_DOT_LEFT, "mate-mousekeys-default-left.png", GTK_STATE_NORMAL, True},
+	{MOUSEKEYS_DOT_MIDDLE, "mate-mousekeys-default-middle.png", GTK_STATE_NORMAL, True},
+	{MOUSEKEYS_DOT_RIGHT, "mate-mousekeys-default-right.png", GTK_STATE_NORMAL, True},
+	{SHIFT_KEY_ICON, "mate-sticky-shift-latched.png", GTK_STATE_NORMAL, False},
+	{SHIFT_KEY_ICON, "mate-sticky-shift-locked.png", GTK_STATE_SELECTED, False},
+	{SHIFT_KEY_ICON, "mate-sticky-shift-none.png", GTK_STATE_INSENSITIVE, True},
+	{CONTROL_KEY_ICON, "mate-sticky-ctrl-latched.png", GTK_STATE_NORMAL, False},
+	{CONTROL_KEY_ICON, "mate-sticky-ctrl-locked.png", GTK_STATE_SELECTED, False},
+	{CONTROL_KEY_ICON, "mate-sticky-ctrl-none.png", GTK_STATE_INSENSITIVE, True},
+	{ALT_KEY_ICON, "mate-sticky-alt-latched.png", GTK_STATE_NORMAL, False},
+	{ALT_KEY_ICON, "mate-sticky-alt-locked.png", GTK_STATE_SELECTED, False},
+	{ALT_KEY_ICON, "mate-sticky-alt-none.png", GTK_STATE_INSENSITIVE, True},
+	{META_KEY_ICON, "mate-sticky-meta-latched.png", GTK_STATE_NORMAL, False},
+	{META_KEY_ICON, "mate-sticky-meta-locked.png", GTK_STATE_SELECTED, False},
+	{META_KEY_ICON, "mate-sticky-meta-none.png", GTK_STATE_INSENSITIVE, True},
+	{SUPER_KEY_ICON, "mate-sticky-super-latched.png", GTK_STATE_NORMAL, False},
+	{SUPER_KEY_ICON, "mate-sticky-super-locked.png", GTK_STATE_SELECTED, False},
+	{SUPER_KEY_ICON, "mate-sticky-super-none.png", GTK_STATE_INSENSITIVE, True},
+	{HYPER_KEY_ICON, "mate-sticky-hyper-latched.png", GTK_STATE_NORMAL, False},
+	{HYPER_KEY_ICON, "mate-sticky-hyper-locked.png", GTK_STATE_SELECTED, False},
+	{HYPER_KEY_ICON, "mate-sticky-hyper-none.png", GTK_STATE_INSENSITIVE, True},
+	{SLOWKEYS_IDLE_ICON, "mate-ax-slowkeys.png", GTK_STATE_NORMAL, True},
+	{SLOWKEYS_PENDING_ICON, "mate-ax-slowkeys-pending.png", GTK_STATE_NORMAL, True},
+	{SLOWKEYS_ACCEPT_ICON, "mate-ax-slowkeys-yes.png", GTK_STATE_NORMAL, True},
+	{SLOWKEYS_REJECT_ICON, "mate-ax-slowkeys-no.png", GTK_STATE_NORMAL, True},
+	{BOUNCEKEYS_ICON, "mate-ax-bouncekeys.png", GTK_STATE_NORMAL, True}
 };
 
 typedef struct {
@@ -149,7 +149,7 @@ static void about_cb(GtkAction* action, AccessxStatusApplet* sapplet)
 		"authors", authors,
 		"documenters", documenters,
 		"translator-credits", _("translator-credits"),
-		"logo-icon-name", "ax-applet",
+		"logo-icon-name", "mate-ax-applet",
 		NULL);
 }
 
@@ -1208,46 +1208,6 @@ static void accessx_status_applet_resize(GtkWidget* widget, int size, gpointer u
 	/* TODO: either rescale icons to fit panel, or tile them when possible */
 }
 
-#if !GTK_CHECK_VERSION (3, 0, 0)
-static void accessx_status_applet_background(MatePanelApplet* a, MatePanelAppletBackgroundType type, GdkColor* color, GdkPixmap* pixmap, gpointer user_data)
-{
-	AccessxStatusApplet* sapplet = user_data;
-
-	GtkRcStyle* rc_style;
-	GtkStyle* style;
-
-	/* reset style */
-	gtk_widget_set_style(GTK_WIDGET(sapplet->applet), NULL);
-	rc_style = gtk_rc_style_new();
-	gtk_widget_modify_style(GTK_WIDGET(sapplet->applet), rc_style);
-	g_object_unref(rc_style);
-
-	switch (type)
-	{
-		case PANEL_COLOR_BACKGROUND:
-			gtk_widget_modify_bg(GTK_WIDGET(sapplet->applet), GTK_STATE_NORMAL, color);
-			break;
-
-		case PANEL_PIXMAP_BACKGROUND:
-			style = gtk_style_copy(gtk_widget_get_style(GTK_WIDGET(sapplet->applet)));
-
-			if (style->bg_pixmap[GTK_STATE_NORMAL])
-			{
-				g_object_unref(style->bg_pixmap[GTK_STATE_NORMAL]);
-			}
-
-			style->bg_pixmap[GTK_STATE_NORMAL] = g_object_ref(pixmap);
-			gtk_widget_set_style(GTK_WIDGET(sapplet->applet), style);
-			g_object_unref(style);
-			break;
-
-		case PANEL_NO_BACKGROUND:
-		default:
-			break;
-	}
-}
-#endif
-
 static gboolean button_press_cb(GtkWidget* widget, GdkEventButton* event, AccessxStatusApplet* sapplet)
 {
 	if (event->button == 1 && event->type == GDK_BUTTON_PRESS)
@@ -1347,9 +1307,6 @@ static gboolean accessx_status_applet_fill(MatePanelApplet* applet)
 		"signal::destroy", accessx_status_applet_destroy, sapplet,
 		"signal::change_orient", accessx_status_applet_reorient, sapplet,
 		"signal::change_size", accessx_status_applet_resize, sapplet,
-#if !GTK_CHECK_VERSION (3, 0, 0)
-		"signal::change_background", accessx_status_applet_background, sapplet,
-#endif
 		NULL);
 
 	g_signal_connect(sapplet->applet, "button_press_event", G_CALLBACK(button_press_cb), sapplet);
