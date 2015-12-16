@@ -1613,9 +1613,11 @@ mate_netspeed_applet_factory(MatePanelApplet *applet_widget, const gchar *iid, g
 	GtkIconTheme *icon_theme;
 	GtkWidget *spacer, *spacer_box;
 
+#if !GTK_CHECK_VERSION (3, 0, 0)
 	/* Have our background automatically painted. */
 	mate_panel_applet_set_background_widget(MATE_PANEL_APPLET(applet_widget),
 		GTK_WIDGET(applet_widget));
+#endif
 
 	if (strcmp (iid, "NetspeedApplet"))
 		return FALSE;
