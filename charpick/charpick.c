@@ -274,11 +274,11 @@ static void
 menuitem_activated (GtkMenuItem *menuitem, charpick_data *curr_data)
 {
 	gchar *string;
-
+	
 	string = g_object_get_data (G_OBJECT (menuitem), "string");
 	if (g_ascii_strcasecmp (curr_data->charlist, string) == 0)
 		return;
-
+	
 	curr_data->charlist = string;
 	build_table (curr_data);
 	if (g_settings_is_writable (curr_data->settings, "current-list"))
@@ -338,7 +338,7 @@ get_menu_pos (GtkMenu *menu, gint *x, gint *y, gboolean *push_in, gpointer data)
 	gint screen_width, screen_height;
 
 #if GTK_CHECK_VERSION (3, 0, 0)
-	gtk_widget_get_preferred_size (GTK_WIDGET (menu), &reqmenu, NULL);
+        gtk_widget_get_preferred_size (GTK_WIDGET (menu), NULL, &reqmenu);
 #else
 	gtk_widget_size_request (GTK_WIDGET (menu), &reqmenu);
 #endif
@@ -457,7 +457,7 @@ build_table(charpick_data *p_curr_data)
 #else
     box = gtk_vbox_new (FALSE, 0);
 #endif
-  else
+  else 
 #if GTK_CHECK_VERSION (3, 0, 0)
     box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 #else
@@ -473,33 +473,30 @@ build_table(charpick_data *p_curr_data)
   
     switch (mate_panel_applet_get_orient (MATE_PANEL_APPLET (p_curr_data->applet))) {
        	case MATE_PANEL_APPLET_ORIENT_DOWN:
-#if GTK_CHECK_VERSION (3, 14, 0)
-		arrow = gtk_image_new_from_icon_name ("pan-down-symbolic", GTK_ICON_SIZE_BUTTON);
+#if GTK_CHECK_VERSION (3, 0, 0)
+          	arrow = gtk_image_new_from_icon_name ("pan-down-symbolic", GTK_ICON_SIZE_MENU);
+       		break;
+       	case MATE_PANEL_APPLET_ORIENT_UP:
+          	arrow = gtk_image_new_from_icon_name ("pan-up-symbolic", GTK_ICON_SIZE_MENU);
+       		break;
+       	case MATE_PANEL_APPLET_ORIENT_LEFT:
+       		arrow = gtk_image_new_from_icon_name ("pan-start-symbolic", GTK_ICON_SIZE_MENU);
+  		break;
+       	case MATE_PANEL_APPLET_ORIENT_RIGHT:
+       		arrow = gtk_image_new_from_icon_name ("pan-end-symbolic", GTK_ICON_SIZE_MENU);
 #else
-		arrow = gtk_arrow_new (GTK_ARROW_DOWN, GTK_SHADOW_OUT);
-#endif
-		break;
-	case MATE_PANEL_APPLET_ORIENT_UP:
-#if GTK_CHECK_VERSION (3, 14, 0)
-		arrow = gtk_image_new_from_icon_name ("pan-up-symbolic", GTK_ICON_SIZE_BUTTON);
-#else
-		arrow = gtk_arrow_new (GTK_ARROW_UP, GTK_SHADOW_OUT);
-#endif
-		break;
-	case MATE_PANEL_APPLET_ORIENT_LEFT:
-#if GTK_CHECK_VERSION (3, 14, 0)
-		arrow = gtk_image_new_from_icon_name ("pan-left-symbolic", GTK_ICON_SIZE_BUTTON);
-#else
-		arrow = gtk_arrow_new (GTK_ARROW_LEFT, GTK_SHADOW_OUT);
-#endif
-		break;
-	case MATE_PANEL_APPLET_ORIENT_RIGHT:
-#if GTK_CHECK_VERSION (3, 14, 0)
-		arrow = gtk_image_new_from_icon_name ("pan-right-symbolic", GTK_ICON_SIZE_BUTTON);
-#else
+          	arrow = gtk_arrow_new (GTK_ARROW_DOWN, GTK_SHADOW_OUT);
+       		break;
+       	case MATE_PANEL_APPLET_ORIENT_UP:
+          	arrow = gtk_arrow_new (GTK_ARROW_UP, GTK_SHADOW_OUT);  
+       		break;
+       	case MATE_PANEL_APPLET_ORIENT_LEFT:
+       		arrow = gtk_arrow_new (GTK_ARROW_LEFT, GTK_SHADOW_OUT);  
+  		break;
+       	case MATE_PANEL_APPLET_ORIENT_RIGHT:
 		arrow = gtk_arrow_new (GTK_ARROW_RIGHT, GTK_SHADOW_OUT);
 #endif
-		break;
+  		break;
     default:
   	  g_assert_not_reached ();
     }
@@ -550,11 +547,11 @@ build_table(charpick_data *p_curr_data)
     g_free (name);
 
 #if GTK_CHECK_VERSION (3, 0, 0)
-    gtk_widget_get_preferred_size (toggle_button[i], &req, NULL);
+    gtk_widget_get_preferred_size (toggle_button[i], NULL, &req);
 #else
     gtk_widget_size_request (toggle_button[i], &req);
 #endif
-
+    
     max_width = MAX (max_width, req.width);
     max_height = MAX (max_height, req.height-2);
   
@@ -595,8 +592,8 @@ build_table(charpick_data *p_curr_data)
 	else row_box[i] = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 	gtk_box_set_homogeneous (GTK_BOX(row_box[i]), TRUE);
 #else
-	if (!p_curr_data->panel_vertical) row_box[i] = gtk_hbox_new (TRUE, 0);
-	else row_box[i] = gtk_vbox_new (TRUE, 0);
+  	if (!p_curr_data->panel_vertical) row_box[i] = gtk_hbox_new (TRUE, 0);
+  	else row_box[i] = gtk_vbox_new (TRUE, 0);
 #endif
   	gtk_box_pack_start (GTK_BOX (button_box), row_box[i], TRUE, TRUE, 0);
   }

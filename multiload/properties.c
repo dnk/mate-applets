@@ -388,7 +388,11 @@ fill_properties(GtkWidget *dialog, MultiloadApplet *ma)
 	label = gtk_label_new_with_mnemonic (_(title));
 	gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
 	gtk_label_set_justify (GTK_LABEL (label), GTK_JUSTIFY_LEFT);
+#if GTK_CHECK_VERSION (3, 0, 0)
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
+#else
 	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+#endif
 	gtk_box_pack_start (GTK_BOX (category_vbox), label, FALSE, FALSE, 0);
 	g_free (title);
 
@@ -509,7 +513,11 @@ fill_properties(GtkWidget *dialog, MultiloadApplet *ma)
 	label = gtk_label_new (title);
 	gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
 	gtk_label_set_justify (GTK_LABEL (label), GTK_JUSTIFY_LEFT);
+#if GTK_CHECK_VERSION (3, 0, 0)
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
+#else
 	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+#endif
 	gtk_box_pack_start (GTK_BOX (category_vbox), label, FALSE, FALSE, 0);
 	gtk_widget_show (label);
 	g_free (title);
@@ -552,7 +560,11 @@ fill_properties(GtkWidget *dialog, MultiloadApplet *ma)
 		label_text = g_strdup(_("System m_onitor height: "));
 	
 	label = gtk_label_new_with_mnemonic(label_text);
+#if GTK_CHECK_VERSION (3, 0, 0)
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
+#else
 	gtk_misc_set_alignment (GTK_MISC (label), 0.0f, 0.5f);
+#endif
 	gtk_size_group_add_widget (label_size, label);
         gtk_box_pack_start (GTK_BOX (control_hbox), label, FALSE, FALSE, 0);
 
@@ -585,7 +597,11 @@ fill_properties(GtkWidget *dialog, MultiloadApplet *ma)
 	gtk_box_pack_start (GTK_BOX (hbox), spin_button, FALSE, FALSE, 0);
 	
 	label = gtk_label_new (_("pixels"));
+#if GTK_CHECK_VERSION (3, 0, 0)
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
+#else
 	gtk_misc_set_alignment (GTK_MISC (label), 0.0f, 0.5f);
+#endif
 	gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
 
 #if GTK_CHECK_VERSION (3, 0, 0)
@@ -597,7 +613,11 @@ fill_properties(GtkWidget *dialog, MultiloadApplet *ma)
 	gtk_widget_show (control_hbox);
 	
 	label = gtk_label_new_with_mnemonic(_("Sys_tem monitor update interval: "));
+#if GTK_CHECK_VERSION (3, 0, 0)
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
+#else
 	gtk_misc_set_alignment (GTK_MISC (label), 0.0f, 0.5f);
+#endif
 	gtk_size_group_add_widget (label_size, label);
 	gtk_box_pack_start (GTK_BOX (control_hbox), label, FALSE, FALSE, 0);
 
@@ -627,7 +647,11 @@ fill_properties(GtkWidget *dialog, MultiloadApplet *ma)
 	}
 	
 	label = gtk_label_new(_("milliseconds"));
+#if GTK_CHECK_VERSION (3, 0, 0)
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
+#else
 	gtk_misc_set_alignment (GTK_MISC (label), 0.0f, 0.5f);
+#endif
 	gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
 	
 	g_free(label_text);
@@ -644,7 +668,11 @@ fill_properties(GtkWidget *dialog, MultiloadApplet *ma)
 	label = gtk_label_new (title);
 	gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
 	gtk_label_set_justify (GTK_LABEL (label), GTK_JUSTIFY_LEFT);
+#if GTK_CHECK_VERSION (3, 0, 0)
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
+#else
 	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+#endif
 	gtk_box_pack_start (GTK_BOX (category_vbox), label, FALSE, FALSE, 0);
 	gtk_widget_show (label);
 	g_free (title);

@@ -54,9 +54,9 @@ typedef struct
 
     GSettings         *settings;
 
-    GtkWidget         *label;
-    GtkWidget         *image;
-    GtkWidget         *hbox;
+    GtkLabel          *label;
+    GtkImage          *image;
+    GtkBox            *box;
 
     gchar             *command;
     gint               interval;
@@ -131,7 +131,7 @@ command_settings_callback (GtkAction *action, CommandApplet *command_applet)
                                                      GTK_STOCK_CLOSE,
                                                      GTK_RESPONSE_CLOSE,
                                                      NULL));
-    table = gtk_table_new (4, 2, FALSE);
+    table = GTK_TABLE (gtk_table_new (4, 2, FALSE));
     gtk_table_set_row_spacings (table, 12);
     gtk_table_set_col_spacings (table, 12);
 
@@ -139,7 +139,12 @@ command_settings_callback (GtkAction *action, CommandApplet *command_applet)
     gtk_container_set_border_width (GTK_CONTAINER (dialog), 10);
 
     widget = gtk_label_new (_("Command:"));
+#if GTK_CHECK_VERSION (3, 0, 0)
+    gtk_widget_set_halign (widget, GTK_ALIGN_END);
+    gtk_widget_set_valign (widget, GTK_ALIGN_CENTER);
+#else
     gtk_misc_set_alignment (GTK_MISC (widget), 1.0, 0.5);
+#endif
     gtk_table_attach (table, widget, 1, 2, 0, 1,
                       GTK_FILL, GTK_FILL,
                       0, 0);
@@ -150,7 +155,12 @@ command_settings_callback (GtkAction *action, CommandApplet *command_applet)
                       0, 0);
 
     widget = gtk_label_new (_("Interval (seconds):"));
+#if GTK_CHECK_VERSION (3, 0, 0)
+    gtk_widget_set_halign (widget, GTK_ALIGN_END);
+    gtk_widget_set_valign (widget, GTK_ALIGN_CENTER);
+#else
     gtk_misc_set_alignment (GTK_MISC (widget), 1.0, 0.5);
+#endif
     gtk_table_attach (table, widget, 1, 2, 1, 2,
                       GTK_FILL, GTK_FILL,
                       0, 0);
@@ -161,7 +171,12 @@ command_settings_callback (GtkAction *action, CommandApplet *command_applet)
                       0, 0);
 
     widget = gtk_label_new (_("Maximum width (chars):"));
+#if GTK_CHECK_VERSION (3, 0, 0)
+    gtk_widget_set_halign (widget, GTK_ALIGN_END);
+    gtk_widget_set_valign (widget, GTK_ALIGN_CENTER);
+#else
     gtk_misc_set_alignment (GTK_MISC (widget), 1.0, 0.5);
+#endif
     gtk_table_attach (table, widget, 1, 2, 2, 3,
                       GTK_FILL, GTK_FILL,
                       0, 0);
@@ -176,7 +191,7 @@ command_settings_callback (GtkAction *action, CommandApplet *command_applet)
                       GTK_EXPAND | GTK_FILL | GTK_SHRINK, GTK_FILL,
                       0, 0);
 
-    gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (dialog)), GTK_WIDGET(table), TRUE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (dialog)), GTK_WIDGET (table), TRUE, TRUE, 0);
 
     g_signal_connect (dialog, "response", G_CALLBACK (gtk_widget_destroy), dialog);
 
@@ -252,7 +267,7 @@ command_execute (CommandApplet *command_applet)
 
     if (g_spawn_command_line_sync (command_applet->command, &output, NULL, &ret, &error))
     {
-        gtk_widget_set_tooltip_text (command_applet->label, command_applet->command);
+        gtk_widget_set_tooltip_text (GTK_WIDGET (command_applet->label), command_applet->command);
 
         if ((output != NULL) && (output[0] != 0))
         {
@@ -267,17 +282,17 @@ command_execute (CommandApplet *command_applet)
 
                     if (goutput)
                     {
-                        gtk_label_set_use_markup (GTK_LABEL(command_applet->label), TRUE);
-                        gtk_label_set_markup (GTK_LABEL(command_applet->label), goutput);
+                        gtk_label_set_use_markup (command_applet->label, TRUE);
+                        gtk_label_set_markup (command_applet->label, goutput);
                     }
                     if (icon)
-                        gtk_image_set_from_icon_name (GTK_IMAGE(command_applet->image), icon, 24);
+                        gtk_image_set_from_icon_name (command_applet->image, icon, 24);
 
                     g_free (goutput);
                     g_free (icon);
                 }
                 else
-                    gtk_label_set_text (GTK_LABEL(command_applet->label), ERROR_OUTPUT);
+                    gtk_label_set_text (command_applet->label, ERROR_OUTPUT);
                 g_key_file_free (file);
             }
             else
@@ -297,14 +312,14 @@ command_execute (CommandApplet *command_applet)
                     output[strlen(output) - 1] = 0;
                 }
 
-                gtk_label_set_text (GTK_LABEL(command_applet->label), output);
+                gtk_label_set_text (command_applet->label, output);
             }
         }
         else
-            gtk_label_set_text (GTK_LABEL(command_applet->label), ERROR_OUTPUT);
+            gtk_label_set_text (command_applet->label, ERROR_OUTPUT);
     }
     else
-        gtk_label_set_text (GTK_LABEL(command_applet->label), ERROR_OUTPUT);
+        gtk_label_set_text (command_applet->label, ERROR_OUTPUT);
 
     g_free (output);
 
@@ -338,24 +353,24 @@ command_applet_fill (MatePanelApplet* applet)
     command_applet->width = g_settings_get_int (command_applet->settings, WIDTH_KEY);
 
 #if GTK_CHECK_VERSION (3, 0, 0)
-    command_applet->hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
+    command_applet->box = GTK_BOX (gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0));
 #else
-    command_applet->hbox = gtk_hbox_new (FALSE, 0);
+    command_applet->box = GTK_BOX (gtk_hbox_new (FALSE, 0));
 #endif
-    command_applet->image = gtk_image_new_from_icon_name (APPLET_ICON, 24);
-    command_applet->label = gtk_label_new (ERROR_OUTPUT);
+    command_applet->image = GTK_IMAGE (gtk_image_new_from_icon_name (APPLET_ICON, 24));
+    command_applet->label = GTK_LABEL (gtk_label_new (ERROR_OUTPUT));
     command_applet->timeout_id = 0;
 
     /* we add the Gtk label into the applet */
-    gtk_box_pack_start (GTK_BOX (command_applet->hbox),
+    gtk_box_pack_start (command_applet->box,
                         GTK_WIDGET (command_applet->image),
                         TRUE, TRUE, 0);
-    gtk_box_pack_start (GTK_BOX (command_applet->hbox),
+    gtk_box_pack_start (command_applet->box,
                         GTK_WIDGET (command_applet->label),
                         TRUE, TRUE, 0);
 
     gtk_container_add (GTK_CONTAINER (applet),
-                       GTK_WIDGET (command_applet->hbox));
+                       GTK_WIDGET (command_applet->box));
 
     gtk_widget_show_all (GTK_WIDGET (command_applet->applet));
 
