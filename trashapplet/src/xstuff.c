@@ -254,9 +254,6 @@ xstuff_set_pos_size (GdkWindow *window, int x, int y, int w, int h)
 	gdk_error_trap_pop_ignored ();
 #else
 	gdk_flush ();
-#if GTK_CHECK_VERSION (3, 0, 0)
-	gdk_error_trap_pop_ignored ();
-#else
 	gdk_error_trap_pop ();
 #endif
 
@@ -532,8 +529,8 @@ xstuff_grab_key_on_all_screens (int      keycode,
 	int         i;
 
 	display   = gdk_display_get_default ();
-#if GTK_CHECK_VERSION (3, 10, 0)
-	n_screens = 1;
+#if GTK_CHECK_VERSION(3, 10, 0)
+	n_screens = 1; /* gdk-3.10, The number of screens is always 1 */
 #else
 	n_screens = gdk_display_get_n_screens (display);
 #endif

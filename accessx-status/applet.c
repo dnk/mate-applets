@@ -197,7 +197,12 @@ static void dialog_cb(GtkAction* action, AccessxStatusApplet* sapplet)
 						      &error);
 
 	if (!error) {
+#if GTK_CHECK_VERSION (3, 0, 0)
+		launch_context = gdk_display_get_app_launch_context (
+			               gtk_widget_get_display (GTK_WIDGET (screen)));
+#else
 		launch_context = gdk_app_launch_context_new ();
+#endif
 		gdk_app_launch_context_set_screen (launch_context, screen);
 		g_app_info_launch (appinfo, NULL, G_APP_LAUNCH_CONTEXT (launch_context), &error);
 
@@ -648,12 +653,20 @@ static void accessx_status_applet_update(AccessxStatusApplet* sapplet, AccessxSt
 				if (locked_mods & modifiers[i].mask)
 				{
 					gtk_widget_set_sensitive(modifiers[i].indicator, TRUE);
+#if GTK_CHECK_VERSION (3, 0, 0)
+					gtk_widget_set_state_flags (modifiers[i].indicator, GTK_STATE_FLAG_SELECTED, TRUE);
+#else
 					gtk_widget_set_state(modifiers[i].indicator, GTK_STATE_SELECTED);
+#endif
 				}
 				else if (latched_mods & modifiers[i].mask)
 				{
 					gtk_widget_set_sensitive(modifiers[i].indicator, TRUE);
+#if GTK_CHECK_VERSION (3, 0, 0)
+					gtk_widget_set_state_flags (modifiers[i].indicator, GTK_STATE_FLAG_NORMAL, TRUE);
+#else
 					gtk_widget_set_state(modifiers[i].indicator, GTK_STATE_NORMAL);
+#endif
 				}
 				else
 				{
@@ -788,7 +801,11 @@ static void accessx_status_applet_notify_xkb_device(AccessxStatusApplet* sapplet
 		if (event->led_state &= ALT_GRAPH_LED_MASK)
 		{
 			gtk_widget_set_sensitive(sapplet->alt_graph_indicator, TRUE);
+#if GTK_CHECK_VERSION (3, 0, 0)
+			gtk_widget_set_state_flags (sapplet->alt_graph_indicator, GTK_STATE_FLAG_NORMAL, TRUE);
+#else
 			gtk_widget_set_state(sapplet->alt_graph_indicator, GTK_STATE_NORMAL);
+#endif
 		}
 		else
 		{
@@ -881,7 +898,11 @@ static GtkIconSet* accessx_status_applet_altgraph_icon_set(AccessxStatusApplet* 
 			case GTK_STATE_NORMAL:
 				alpha = 255;
 				gtk_widget_set_sensitive(widget, TRUE);
+#if GTK_CHECK_VERSION (3, 0, 0)
+				gtk_widget_set_state_flags (widget, GTK_STATE_FLAG_NORMAL, TRUE);
+#else
 				gtk_widget_set_state(widget, GTK_STATE_NORMAL);
+#endif
 				break;
 			case GTK_STATE_SELECTED:
 				/* FIXME: should use text/base here, for selected ? */
@@ -889,7 +910,11 @@ static GtkIconSet* accessx_status_applet_altgraph_icon_set(AccessxStatusApplet* 
 				bg = &style->black;
 				alpha = 255;
 				gtk_widget_set_sensitive(widget, TRUE);
+#if GTK_CHECK_VERSION (3, 0, 0)
+				gtk_widget_set_state_flags (widget, GTK_STATE_FLAG_SELECTED, TRUE);
+#else
 				gtk_widget_set_state(widget, GTK_STATE_SELECTED);
+#endif
 				break;
 			case GTK_STATE_INSENSITIVE:
 			default:
@@ -921,7 +946,11 @@ static GtkIconSet* accessx_status_applet_altgraph_icon_set(AccessxStatusApplet* 
 		gtk_icon_source_free(source);
 	}
 	/* we mucked about with the box's state to create the icons; restore it to normal */
+#if GTK_CHECK_VERSION (3, 0, 0)
+	gtk_widget_set_state_flags (widget, GTK_STATE_FLAG_NORMAL, TRUE);
+#else
 	gtk_widget_set_state(widget, GTK_STATE_NORMAL);
+#endif
 	gtk_widget_set_sensitive(widget, TRUE);
 
 	return icon_set;
