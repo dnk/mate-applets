@@ -28,11 +28,6 @@
 #include <mate-panel-applet-gsettings.h>
 
 #include <libmate-desktop/mate-aboutdialog.h>
-#if GTK_CHECK_VERSION (3, 0, 0)
-#define MATE_DESKTOP_USE_UNSTABLE_API
-#include <libmate-desktop/mate-desktop-utils.h>
-#define gdk_spawn_command_line_on_screen mate_gdk_spawn_command_line_on_screen
-#endif
 
 #include "global.h"
 
@@ -434,7 +429,7 @@ multiload_applet_refresh(MultiloadApplet *ma)
 #if GTK_CHECK_VERSION (3, 0, 0)
 		ma->box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 #else
-		ma->box = gtk_hbox_new(FALSE, 0);
+	     	ma->box = gtk_hbox_new(FALSE, 0);
 #endif
 	}
 	else {
@@ -444,7 +439,7 @@ multiload_applet_refresh(MultiloadApplet *ma)
 		ma->box = gtk_vbox_new(FALSE, 0);
 #endif
 	}
-
+	
 	gtk_container_add(GTK_CONTAINER(ma->applet), ma->box);
 			
 	/* create the NGRAPHS graphs, passing in their user-configurable properties with gsettings. */
