@@ -551,6 +551,7 @@ AC_DEFINE_DIR(MATE_PIXMAPSDIR, "${pixmapsdir}", [Mate Pixmaps Directory])
 AC_DEFINE_DIR(PKGDATADIR, "${pkgdatadir}", [Mate Applets Directory])
 AC_DEFINE_DIR(GTK_BUILDERDIR, "${builderdir}", [GtkBuilder Resources Directory])
 AC_DEFINE_DIR(DATADIR, "${datadir}", [datadir])
+AC_DEFINE_DIR(PKG_DATA_DIR, "${pkgdatadir}", [pkgdatadir])
 AC_DEFINE_DIR(SYSCONFDIR, "${sysconfdir}", [sysconfdir])
 AC_DEFINE_DIR(LIBDIR, "${libdir}", [libdir])
 AC_DEFINE_DIR(PREFIX, "$prefix", [install prefix])
@@ -619,7 +620,6 @@ timerapplet/Makefile
 timerapplet/org.mate.panel.applet.timer.gschema.xml
 command/Makefile
 command/org.mate.panel.applet.command.gschema.xml
-null_applet/Makefile
 netspeed/Makefile
 netspeed/data/Makefile
 netspeed/data/org.mate.panel.applet.netspeed.gschema.xml

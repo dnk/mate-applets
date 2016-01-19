@@ -16,7 +16,7 @@
  *  License along with this library; if not, write to the Free
  *  Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.
  *
- * Authors : Carlos García Campos <carlosgc@gnome.org>
+ * Authors : Carlos GarcÃ­a Campos <carlosgc@gnome.org>
  */
 
 #include <glib/gi18n.h>
@@ -188,7 +188,6 @@ cpufreq_popup_frequencies_menu_activate (GtkAction    *action,
 	const gchar     *name;
 	guint            cpu;
 	guint            freq;
-	guint32          parent;
 
 	if (!gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action)))
 		return;
@@ -198,10 +197,8 @@ cpufreq_popup_frequencies_menu_activate (GtkAction    *action,
 	cpu = cpufreq_monitor_get_cpu (popup->priv->monitor);
 	name = gtk_action_get_name (action);
 	freq = (guint) atoi (name + strlen ("Frequency"));
-	parent = GDK_WINDOW_XID (gtk_widget_get_window (popup->priv->parent));
-	
 
-	cpufreq_selector_set_frequency_async (selector, cpu, freq, parent);
+	cpufreq_selector_set_frequency_async (selector, cpu, freq);
 }
 
 static void
@@ -212,7 +209,6 @@ cpufreq_popup_governors_menu_activate (GtkAction    *action,
 	const gchar     *name;
 	guint            cpu;
 	const gchar     *governor;
-	guint32          parent;
 
 	if (!gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action)))
 		return;
@@ -222,9 +218,8 @@ cpufreq_popup_governors_menu_activate (GtkAction    *action,
 	cpu = cpufreq_monitor_get_cpu (popup->priv->monitor);
 	name = gtk_action_get_name (action);
 	governor = name + strlen ("Governor");
-	parent = GDK_WINDOW_XID (gtk_widget_get_window (popup->priv->parent));
 
-	cpufreq_selector_set_governor_async (selector, cpu, governor, parent);
+	cpufreq_selector_set_governor_async (selector, cpu, governor);
 }
 
 static void

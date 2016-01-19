@@ -17,8 +17,7 @@ AM_CPPFLAGS =					\
 	$(MATEDESKTOP_CFLAGS)		\
 	$(LIBWNCK_CFLAGS)			\
 	$(XML2_CFLAGS)				\
-	-DSTICKYNOTES_MENU_UI_DIR=\""$(uidir)"\"\
-	-DSTICKYNOTES_ICONDIR=\"$(datadir)/pixmaps/mate-stickynotes/\"
+	-DSTICKYNOTES_MENU_UI_DIR=\""$(uidir)"\"
 
 libexec_PROGRAMS = stickynotes-applet
 
@@ -52,9 +51,6 @@ stickynotes_gschema_in_files = org.mate.stickynotes.gschema.xml.in
 gsettings_SCHEMAS = $(stickynotes_gschema_in_files:.xml.in=.xml)
 @GSETTINGS_RULES@
 
-convertdir = $(datadir)/MateConf/gsettings
-convert_DATA = stickynotes-applet.convert
-
 appletdir   = $(datadir)/mate-panel/applets
 applet_DATA = $(applet_in_files:.mate-panel-applet.in=.mate-panel-applet)
 
@@ -82,7 +78,6 @@ EXTRA_DIST = \
 	     $(builder_files) \
 	     $(ui_files) \
 	     $(stickynotes_gschema_in_files) \
-	     $(convert_DATA) \
              $(service_in_files) \
 	     org.mate.applets.StickyNotesApplet.mate-panel-applet.in.in
 
