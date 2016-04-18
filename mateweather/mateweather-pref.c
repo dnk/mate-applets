@@ -38,7 +38,6 @@
 #define NEVER_SENSITIVE "never_sensitive"
 
 struct _MateWeatherPrefPrivate {
-	GtkWidget* basic_detailed_btn;
 	GtkWidget* basic_temp_combo;
 	GtkWidget* basic_speed_combo;
 	GtkWidget* basic_dist_combo;
@@ -183,10 +182,6 @@ static gboolean update_dialog(MateWeatherPref* pref)
 
     gtk_combo_box_set_active(GTK_COMBO_BOX(pref->priv->basic_dist_combo), gw_applet->mateweather_pref.distance_unit - 2);
 
-	#if 0
-		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pref->priv->basic_detailed_btn), gw_applet->mateweather_pref.detailed);
-	#endif
-
 	#ifdef RADARMAP
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pref->priv->basic_radar_btn), gw_applet->mateweather_pref.radar_enabled);
 
@@ -274,7 +269,7 @@ static void load_locations(MateWeatherPref* pref)
 	GtkTreeViewColumn* column;
 	GtkCellRenderer* cell_renderer;
 
-	/* Add a colum for the locations */
+	/* Add a column for the locations */
 	cell_renderer = gtk_cell_renderer_text_new();
 	column = gtk_tree_view_column_new_with_attributes("not used", cell_renderer, "text", MATEWEATHER_XML_COL_LOC, NULL);
 	gtk_tree_view_append_column(tree, column);
@@ -347,18 +342,6 @@ static void auto_update_toggled(GtkToggleButton* button, MateWeatherPref* pref)
 		}
 	}
 }
-
-#if 0
-	static void detailed_toggled(GtkToggleButton* button, MateWeatherPref* pref)
-	{
-		MateWeatherApplet* gw_applet = pref->priv->applet;
-		gboolean toggled;
-
-		toggled = gtk_toggle_button_get_active(button);
-		gw_applet->mateweather_pref.detailed = toggled;
-		g_settings_set_boolean (gw_applet->settings, "enable-detailed-forecast", toggled);
-	}
-#endif
 
 static void temp_combo_changed_cb(GtkComboBox* combo, MateWeatherPref* pref)
 {
@@ -555,7 +538,7 @@ static gboolean free_data(GtkTreeModel* model, GtkTreePath* path, GtkTreeIter* i
 }
 
 
-static GtkWidget* create_hig_catagory(GtkWidget* main_box, gchar* title)
+static GtkWidget* create_hig_category(GtkWidget* main_box, gchar* title)
 {
 	GtkWidget* vbox;
 	GtkWidget* vbox2;
@@ -572,8 +555,8 @@ static GtkWidget* create_hig_catagory(GtkWidget* main_box, gchar* title)
 
 	tmp = g_strdup_printf ("<b>%s</b>", title);
 	label = gtk_label_new (NULL);
-#if GTK_CHECK_VERSION (3, 0, 0)
-	gtk_widget_set_halign (label, GTK_ALIGN_START);
+#if GTK_CHECK_VERSION (3, 16, 0)
+	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
 #else
 	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
 #endif
@@ -880,10 +863,10 @@ static void mateweather_pref_create(MateWeatherPref* pref)
 	temp_label = gtk_label_new_with_mnemonic (_("_Temperature unit:"));
 	gtk_label_set_use_markup (GTK_LABEL (temp_label), TRUE);
 	gtk_label_set_justify (GTK_LABEL (temp_label), GTK_JUSTIFY_LEFT);
-#if GTK_CHECK_VERSION (3, 0, 0)
-	gtk_widget_set_halign (temp_label, GTK_ALIGN_START);
+#if GTK_CHECK_VERSION (3, 16, 0)
+	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
 #else
-	gtk_misc_set_alignment (GTK_MISC (temp_label), 0, 0.5);
+	gtk_misc_set_alignment (GTK_MISC (temp_label), 0.0, 0.5);
 #endif
 	gtk_widget_show (temp_label);
 
@@ -906,10 +889,10 @@ static void mateweather_pref_create(MateWeatherPref* pref)
 	speed_label = gtk_label_new_with_mnemonic (_("_Wind speed unit:"));
 	gtk_label_set_use_markup (GTK_LABEL (speed_label), TRUE);
 	gtk_label_set_justify (GTK_LABEL (speed_label), GTK_JUSTIFY_LEFT);
-#if GTK_CHECK_VERSION (3, 0, 0)
-	gtk_widget_set_halign (speed_label, GTK_ALIGN_START);
+#if GTK_CHECK_VERSION (3, 16, 0)
+	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
 #else
-	gtk_misc_set_alignment (GTK_MISC (speed_label), 0, 0.5);
+	gtk_misc_set_alignment (GTK_MISC (speed_label), 0.0, 0.5);
 #endif
 	gtk_widget_show (speed_label);
 
@@ -937,10 +920,10 @@ static void mateweather_pref_create(MateWeatherPref* pref)
 	pres_label = gtk_label_new_with_mnemonic (_("_Pressure unit:"));
 	gtk_label_set_use_markup (GTK_LABEL (pres_label), TRUE);
 	gtk_label_set_justify (GTK_LABEL (pres_label), GTK_JUSTIFY_LEFT);
-#if GTK_CHECK_VERSION (3, 0, 0)
-	gtk_widget_set_halign (pres_label, GTK_ALIGN_START);
+#if GTK_CHECK_VERSION (3, 16, 0)
+	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
 #else
-	gtk_misc_set_alignment (GTK_MISC (pres_label), 0, 0.5);
+	gtk_misc_set_alignment (GTK_MISC (pres_label), 0.0, 0.5);
 #endif
 	gtk_widget_show (pres_label);
 
@@ -971,8 +954,8 @@ static void mateweather_pref_create(MateWeatherPref* pref)
 	dist_label = gtk_label_new_with_mnemonic (_("_Visibility unit:"));
 	gtk_label_set_use_markup (GTK_LABEL (dist_label), TRUE);
 	gtk_label_set_justify (GTK_LABEL (dist_label), GTK_JUSTIFY_LEFT);
-#if GTK_CHECK_VERSION (3, 0, 0)
-	gtk_widget_set_halign (dist_label, GTK_ALIGN_START);
+#if GTK_CHECK_VERSION (3, 16, 0)
+	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
 #else
 	gtk_misc_set_alignment (GTK_MISC (dist_label), 0, 0.5);
 #endif
@@ -1080,7 +1063,7 @@ static void mateweather_pref_create(MateWeatherPref* pref)
 		g_signal_connect (G_OBJECT (pref->priv->basic_show_notifications_btn), "toggled", G_CALLBACK (show_notifications_toggled), pref);
     #endif
 
-	frame = create_hig_catagory (pref_basic_vbox, _("Update"));
+	frame = create_hig_category (pref_basic_vbox, _("Update"));
 
 #if GTK_CHECK_VERSION (3, 0, 0)
 	pref_basic_update_hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12);
@@ -1090,12 +1073,6 @@ static void mateweather_pref_create(MateWeatherPref* pref)
 
 	pref_basic_update_lbl = gtk_label_new_with_mnemonic (_("_Automatically update every:"));
 	gtk_widget_show (pref_basic_update_lbl);
-
-
-/*
-	gtk_label_set_justify (GTK_LABEL (pref_basic_update_lbl), GTK_JUSTIFY_RIGHT);
-	gtk_misc_set_alignment (GTK_MISC (pref_basic_update_lbl), 1, 0.5);
-*/
 
 	gtk_widget_show (pref_basic_update_hbox);
 
@@ -1129,7 +1106,7 @@ static void mateweather_pref_create(MateWeatherPref* pref)
 
 	gtk_container_add (GTK_CONTAINER (frame), pref_basic_update_hbox);
 
-	frame = create_hig_catagory (pref_basic_vbox, _("Display"));
+	frame = create_hig_category (pref_basic_vbox, _("Display"));
 
 #if GTK_CHECK_VERSION (3, 0, 0)
 	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
@@ -1168,8 +1145,8 @@ static void mateweather_pref_create(MateWeatherPref* pref)
 	gtk_container_add (GTK_CONTAINER (pref_notebook), pref_loc_hbox);
 
 	tree_label = gtk_label_new_with_mnemonic (_("_Select a location:"));
-#if GTK_CHECK_VERSION (3, 0, 0)
-	gtk_widget_set_halign (tree_label, GTK_ALIGN_START);
+#if GTK_CHECK_VERSION (3, 16, 0)
+	gtk_label_set_xalign (GTK_LABEL (tree_label), 0.0);
 #else
 	gtk_misc_set_alignment (GTK_MISC (tree_label), 0.0, 0.5);
 #endif

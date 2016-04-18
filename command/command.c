@@ -2,20 +2,21 @@
  *
  * Copyright (C) 2013-2014 Stefano Karapetsas
  *
- *  This file is part of MATE Applets.
+ * This file is part of MATE Applets.
  *
- *  MATE Applets is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of the
+ * License, or (at your option) any later version.
  *
- *  MATE Applets is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with MATE Applets.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  *
  * Authors:
  *      Stefano Karapetsas <stefano@karapetsas.com>
@@ -84,7 +85,7 @@ command_applet_destroy (MatePanelApplet *applet_widget, CommandApplet *command_a
 
     if (command_applet->timeout_id != 0)
     {
-        g_source_remove(command_applet->timeout_id);
+        g_source_remove (command_applet->timeout_id);
         command_applet->timeout_id = 0;
     }
 
@@ -139,9 +140,9 @@ command_settings_callback (GtkAction *action, CommandApplet *command_applet)
     gtk_container_set_border_width (GTK_CONTAINER (dialog), 10);
 
     widget = gtk_label_new (_("Command:"));
-#if GTK_CHECK_VERSION (3, 0, 0)
-    gtk_widget_set_halign (widget, GTK_ALIGN_END);
-    gtk_widget_set_valign (widget, GTK_ALIGN_CENTER);
+#if GTK_CHECK_VERSION (3, 16, 0)
+    gtk_label_set_xalign (GTK_LABEL (widget), 1.0);
+    gtk_label_set_yalign (GTK_LABEL (widget), 0.5);
 #else
     gtk_misc_set_alignment (GTK_MISC (widget), 1.0, 0.5);
 #endif
@@ -155,9 +156,9 @@ command_settings_callback (GtkAction *action, CommandApplet *command_applet)
                       0, 0);
 
     widget = gtk_label_new (_("Interval (seconds):"));
-#if GTK_CHECK_VERSION (3, 0, 0)
-    gtk_widget_set_halign (widget, GTK_ALIGN_END);
-    gtk_widget_set_valign (widget, GTK_ALIGN_CENTER);
+#if GTK_CHECK_VERSION (3, 16, 0)
+    gtk_label_set_xalign (GTK_LABEL (widget), 1.0);
+    gtk_label_set_yalign (GTK_LABEL (widget), 0.5);
 #else
     gtk_misc_set_alignment (GTK_MISC (widget), 1.0, 0.5);
 #endif
@@ -171,9 +172,9 @@ command_settings_callback (GtkAction *action, CommandApplet *command_applet)
                       0, 0);
 
     widget = gtk_label_new (_("Maximum width (chars):"));
-#if GTK_CHECK_VERSION (3, 0, 0)
-    gtk_widget_set_halign (widget, GTK_ALIGN_END);
-    gtk_widget_set_valign (widget, GTK_ALIGN_CENTER);
+#if GTK_CHECK_VERSION (3, 16, 0)
+    gtk_label_set_xalign (GTK_LABEL (widget), 1.0);
+    gtk_label_set_yalign (GTK_LABEL (widget), 0.5);
 #else
     gtk_misc_set_alignment (GTK_MISC (widget), 1.0, 0.5);
 #endif
@@ -231,7 +232,7 @@ settings_width_changed (GSettings *settings, gchar *key, CommandApplet *command_
     command_applet->width = width;
 
     /* execute command to start new timer */
-    command_execute(command_applet);
+    command_execute (command_applet);
 }
 
 static void
@@ -250,7 +251,7 @@ settings_interval_changed (GSettings *settings, gchar *key, CommandApplet *comma
     /* stop current timer */
     if (command_applet->timeout_id != 0)
     {
-        g_source_remove(command_applet->timeout_id);
+        g_source_remove (command_applet->timeout_id);
         command_applet->timeout_id = 0;
     }
 

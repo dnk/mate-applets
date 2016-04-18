@@ -235,10 +235,10 @@ static void mateweather_dialog_create(MateWeatherDialog* dialog)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
   gtk_label_set_justify (GTK_LABEL (cond_location_lbl), GTK_JUSTIFY_LEFT);
-#if GTK_CHECK_VERSION (3, 0, 0)
-  gtk_widget_set_halign (cond_location_lbl, GTK_ALIGN_START);
+#if GTK_CHECK_VERSION (3, 16, 0)
+  gtk_label_set_xalign (GTK_LABEL (cond_location_lbl), 0.0);
 #else
-  gtk_misc_set_alignment (GTK_MISC (cond_location_lbl), 0, 0.5);
+  gtk_misc_set_alignment (GTK_MISC (cond_location_lbl), 0.0, 0.5);
 #endif
 
   cond_update_lbl = gtk_label_new (_("Last update:"));
@@ -247,10 +247,10 @@ static void mateweather_dialog_create(MateWeatherDialog* dialog)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
   gtk_label_set_justify (GTK_LABEL (cond_update_lbl), GTK_JUSTIFY_LEFT);
-#if GTK_CHECK_VERSION (3, 0, 0)
-  gtk_widget_set_halign (cond_update_lbl, GTK_ALIGN_START);
+#if GTK_CHECK_VERSION (3, 16, 0)
+  gtk_label_set_xalign (GTK_LABEL (cond_update_lbl), 0.0);
 #else
-  gtk_misc_set_alignment (GTK_MISC (cond_update_lbl), 0, 0.5);
+  gtk_misc_set_alignment (GTK_MISC (cond_update_lbl), 0.0, 0.5);
 #endif
 
   cond_cond_lbl = gtk_label_new (_("Conditions:"));
@@ -259,10 +259,10 @@ static void mateweather_dialog_create(MateWeatherDialog* dialog)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
   gtk_label_set_justify (GTK_LABEL (cond_cond_lbl), GTK_JUSTIFY_LEFT);
-#if GTK_CHECK_VERSION (3, 0, 0)
-  gtk_widget_set_halign (cond_cond_lbl, GTK_ALIGN_START);
+#if GTK_CHECK_VERSION (3, 16, 0)
+  gtk_label_set_xalign (GTK_LABEL (cond_cond_lbl), 0.0);
 #else
-  gtk_misc_set_alignment (GTK_MISC (cond_cond_lbl), 0, 0.5);
+  gtk_misc_set_alignment (GTK_MISC (cond_cond_lbl), 0.0, 0.5);
 #endif
 
   cond_sky_lbl = gtk_label_new (_("Sky:"));
@@ -271,10 +271,10 @@ static void mateweather_dialog_create(MateWeatherDialog* dialog)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
   gtk_label_set_justify (GTK_LABEL (cond_sky_lbl), GTK_JUSTIFY_LEFT);
-#if GTK_CHECK_VERSION (3, 0, 0)
-  gtk_widget_set_halign (cond_sky_lbl, GTK_ALIGN_START);
+#if GTK_CHECK_VERSION (3, 16, 0)
+  gtk_label_set_xalign (GTK_LABEL (cond_sky_lbl), 0.0);
 #else
-  gtk_misc_set_alignment (GTK_MISC (cond_sky_lbl), 0, 0.5);
+  gtk_misc_set_alignment (GTK_MISC (cond_sky_lbl), 0.0, 0.5);
 #endif
 
   cond_temp_lbl = gtk_label_new (_("Temperature:"));
@@ -283,10 +283,10 @@ static void mateweather_dialog_create(MateWeatherDialog* dialog)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
   gtk_label_set_justify (GTK_LABEL (cond_temp_lbl), GTK_JUSTIFY_LEFT);
-#if GTK_CHECK_VERSION (3, 0, 0)
-  gtk_widget_set_halign (cond_temp_lbl, GTK_ALIGN_START);
+#if GTK_CHECK_VERSION (3, 16, 0)
+  gtk_label_set_xalign (GTK_LABEL (cond_temp_lbl), 0.0);
 #else
-  gtk_misc_set_alignment (GTK_MISC (cond_temp_lbl), 0, 0.5);
+  gtk_misc_set_alignment (GTK_MISC (cond_temp_lbl), 0.0, 0.5);
 #endif
 
   cond_apparent_lbl = gtk_label_new (_("Feels like:"));
@@ -295,10 +295,10 @@ static void mateweather_dialog_create(MateWeatherDialog* dialog)
 		    (GtkAttachOptions) (GTK_FILL),
 		    (GtkAttachOptions) (0), 0, 0);
   gtk_label_set_justify (GTK_LABEL (cond_apparent_lbl), GTK_JUSTIFY_LEFT);
-#if GTK_CHECK_VERSION (3, 0, 0)
-  gtk_widget_set_halign (cond_apparent_lbl, GTK_ALIGN_START);
+#if GTK_CHECK_VERSION (3, 16, 0)
+  gtk_label_set_xalign (GTK_LABEL (cond_apparent_lbl), 0.0);
 #else
-  gtk_misc_set_alignment (GTK_MISC (cond_apparent_lbl), 0, 0.5);
+  gtk_misc_set_alignment (GTK_MISC (cond_apparent_lbl), 0.0, 0.5);
 #endif
 
   cond_dew_lbl = gtk_label_new (_("Dew point:"));
@@ -307,10 +307,10 @@ static void mateweather_dialog_create(MateWeatherDialog* dialog)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
   gtk_label_set_justify (GTK_LABEL (cond_dew_lbl), GTK_JUSTIFY_LEFT);
-#if GTK_CHECK_VERSION (3, 0, 0)
-  gtk_widget_set_halign (cond_dew_lbl, GTK_ALIGN_START);
+#if GTK_CHECK_VERSION (3, 16, 0)
+  gtk_label_set_xalign (GTK_LABEL (cond_dew_lbl), 0.0);
 #else
-  gtk_misc_set_alignment (GTK_MISC (cond_dew_lbl), 0, 0.5);
+  gtk_misc_set_alignment (GTK_MISC (cond_dew_lbl), 0.0, 0.5);
 #endif
 
   cond_humidity_lbl = gtk_label_new (_("Relative humidity:"));
@@ -319,10 +319,10 @@ static void mateweather_dialog_create(MateWeatherDialog* dialog)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
   gtk_label_set_justify (GTK_LABEL (cond_humidity_lbl), GTK_JUSTIFY_LEFT);
-#if GTK_CHECK_VERSION (3, 0, 0)
-  gtk_widget_set_halign (cond_humidity_lbl, GTK_ALIGN_START);
+#if GTK_CHECK_VERSION (3, 16, 0)
+  gtk_label_set_xalign (GTK_LABEL (cond_humidity_lbl), 0.0);
 #else
-  gtk_misc_set_alignment (GTK_MISC (cond_humidity_lbl), 0, 0.5);
+  gtk_misc_set_alignment (GTK_MISC (cond_humidity_lbl), 0.0, 0.5);
 #endif
 
   cond_wind_lbl = gtk_label_new (_("Wind:"));
@@ -331,10 +331,10 @@ static void mateweather_dialog_create(MateWeatherDialog* dialog)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
   gtk_label_set_justify (GTK_LABEL (cond_wind_lbl), GTK_JUSTIFY_LEFT);
-#if GTK_CHECK_VERSION (3, 0, 0)
-  gtk_widget_set_halign (cond_wind_lbl, GTK_ALIGN_START);
+#if GTK_CHECK_VERSION (3, 16, 0)
+  gtk_label_set_xalign (GTK_LABEL (cond_wind_lbl), 0.0);
 #else
-  gtk_misc_set_alignment (GTK_MISC (cond_wind_lbl), 0, 0.5);
+  gtk_misc_set_alignment (GTK_MISC (cond_wind_lbl), 0.0, 0.5);
 #endif
 
   cond_pressure_lbl = gtk_label_new (_("Pressure:"));
@@ -343,10 +343,10 @@ static void mateweather_dialog_create(MateWeatherDialog* dialog)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
   gtk_label_set_justify (GTK_LABEL (cond_pressure_lbl), GTK_JUSTIFY_LEFT);
-#if GTK_CHECK_VERSION (3, 0, 0)
-  gtk_widget_set_halign (cond_pressure_lbl, GTK_ALIGN_START);
+#if GTK_CHECK_VERSION (3, 16, 0)
+  gtk_label_set_xalign (GTK_LABEL (cond_pressure_lbl), 0.0);
 #else
-  gtk_misc_set_alignment (GTK_MISC (cond_pressure_lbl), 0, 0.5);
+  gtk_misc_set_alignment (GTK_MISC (cond_pressure_lbl), 0.0, 0.5);
 #endif
 
   cond_vis_lbl = gtk_label_new (_("Visibility:"));
@@ -355,10 +355,10 @@ static void mateweather_dialog_create(MateWeatherDialog* dialog)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
   gtk_label_set_justify (GTK_LABEL (cond_vis_lbl), GTK_JUSTIFY_LEFT);
-#if GTK_CHECK_VERSION (3, 0, 0)
-  gtk_widget_set_halign (cond_vis_lbl, GTK_ALIGN_START);
+#if GTK_CHECK_VERSION (3, 16, 0)
+  gtk_label_set_xalign (GTK_LABEL (cond_vis_lbl), 0.0);
 #else
-  gtk_misc_set_alignment (GTK_MISC (cond_vis_lbl), 0, 0.5);
+  gtk_misc_set_alignment (GTK_MISC (cond_vis_lbl), 0.0, 0.5);
 #endif
 
   cond_sunrise_lbl = gtk_label_new (_("Sunrise:"));
@@ -367,10 +367,10 @@ static void mateweather_dialog_create(MateWeatherDialog* dialog)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
   gtk_label_set_justify (GTK_LABEL (cond_sunrise_lbl), GTK_JUSTIFY_LEFT);
-#if GTK_CHECK_VERSION (3, 0, 0)
-  gtk_widget_set_halign (cond_sunrise_lbl, GTK_ALIGN_START);
+#if GTK_CHECK_VERSION (3, 16, 0)
+  gtk_label_set_xalign (GTK_LABEL (cond_sunrise_lbl), 0.0);
 #else
-  gtk_misc_set_alignment (GTK_MISC (cond_sunrise_lbl), 0, 0.5);
+  gtk_misc_set_alignment (GTK_MISC (cond_sunrise_lbl), 0.0, 0.5);
 #endif
 
   cond_sunset_lbl = gtk_label_new (_("Sunset:"));
@@ -379,10 +379,10 @@ static void mateweather_dialog_create(MateWeatherDialog* dialog)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
   gtk_label_set_justify (GTK_LABEL (cond_sunset_lbl), GTK_JUSTIFY_LEFT);
-#if GTK_CHECK_VERSION (3, 0, 0)
-  gtk_widget_set_halign (cond_sunset_lbl, GTK_ALIGN_START);
+#if GTK_CHECK_VERSION (3, 16, 0)
+  gtk_label_set_xalign (GTK_LABEL (cond_sunset_lbl), 0.0);
 #else
-  gtk_misc_set_alignment (GTK_MISC (cond_sunset_lbl), 0, 0.5);
+  gtk_misc_set_alignment (GTK_MISC (cond_sunset_lbl), 0.0, 0.5);
 #endif
 
   priv->cond_location = gtk_label_new ("");
@@ -392,10 +392,10 @@ static void mateweather_dialog_create(MateWeatherDialog* dialog)
                     (GtkAttachOptions) (0), 0, 0);
   gtk_label_set_selectable (GTK_LABEL (priv->cond_location), TRUE);
   gtk_label_set_justify (GTK_LABEL (priv->cond_location), GTK_JUSTIFY_LEFT);
-#if GTK_CHECK_VERSION (3, 0, 0)
-  gtk_widget_set_halign (priv->cond_location, GTK_ALIGN_START);
+#if GTK_CHECK_VERSION (3, 16, 0)
+  gtk_label_set_xalign (GTK_LABEL (priv->cond_location), 0.0);
 #else
-  gtk_misc_set_alignment (GTK_MISC (priv->cond_location), 0, 0.5);
+  gtk_misc_set_alignment (GTK_MISC (priv->cond_location), 0.0, 0.5);
 #endif
 
   priv->cond_update = gtk_label_new ("");
@@ -405,10 +405,10 @@ static void mateweather_dialog_create(MateWeatherDialog* dialog)
                     (GtkAttachOptions) (0), 0, 0);
   gtk_label_set_selectable (GTK_LABEL (priv->cond_update), TRUE);
   gtk_label_set_justify (GTK_LABEL (priv->cond_update), GTK_JUSTIFY_LEFT);
-#if GTK_CHECK_VERSION (3, 0, 0)
-  gtk_widget_set_halign (priv->cond_update, GTK_ALIGN_START);
+#if GTK_CHECK_VERSION (3, 16, 0)
+  gtk_label_set_xalign (GTK_LABEL (priv->cond_update), 0.0);
 #else
-  gtk_misc_set_alignment (GTK_MISC (priv->cond_update), 0, 0.5);
+  gtk_misc_set_alignment (GTK_MISC (priv->cond_update), 0.0, 0.5);
 #endif
 
   priv->cond_cond = gtk_label_new ("");
@@ -418,10 +418,10 @@ static void mateweather_dialog_create(MateWeatherDialog* dialog)
                     (GtkAttachOptions) (0), 0, 0);
   gtk_label_set_selectable (GTK_LABEL (priv->cond_cond), TRUE);
   gtk_label_set_justify (GTK_LABEL (priv->cond_cond), GTK_JUSTIFY_LEFT);
-#if GTK_CHECK_VERSION (3, 0, 0)
-  gtk_widget_set_halign (priv->cond_cond, GTK_ALIGN_START);
+#if GTK_CHECK_VERSION (3, 16, 0)
+  gtk_label_set_xalign (GTK_LABEL (priv->cond_cond), 0.0);
 #else
-  gtk_misc_set_alignment (GTK_MISC (priv->cond_cond), 0, 0.5);
+  gtk_misc_set_alignment (GTK_MISC (priv->cond_cond), 0.0, 0.5);
 #endif
 
   priv->cond_sky = gtk_label_new ("");
@@ -431,10 +431,10 @@ static void mateweather_dialog_create(MateWeatherDialog* dialog)
                     (GtkAttachOptions) (0), 0, 0);
   gtk_label_set_selectable (GTK_LABEL (priv->cond_sky), TRUE);
   gtk_label_set_justify (GTK_LABEL (priv->cond_sky), GTK_JUSTIFY_LEFT);
-#if GTK_CHECK_VERSION (3, 0, 0)
-  gtk_widget_set_halign (priv->cond_sky, GTK_ALIGN_START);
+#if GTK_CHECK_VERSION (3, 16, 0)
+  gtk_label_set_xalign (GTK_LABEL (priv->cond_sky), 0.0);
 #else
-  gtk_misc_set_alignment (GTK_MISC (priv->cond_sky), 0, 0.5);
+  gtk_misc_set_alignment (GTK_MISC (priv->cond_sky), 0.0, 0.5);
 #endif
 
   priv->cond_temp = gtk_label_new ("");
@@ -444,10 +444,10 @@ static void mateweather_dialog_create(MateWeatherDialog* dialog)
                     (GtkAttachOptions) (0), 0, 0);
   gtk_label_set_selectable (GTK_LABEL (priv->cond_temp), TRUE);
   gtk_label_set_justify (GTK_LABEL (priv->cond_temp), GTK_JUSTIFY_LEFT);
-#if GTK_CHECK_VERSION (3, 0, 0)
-  gtk_widget_set_halign (priv->cond_temp, GTK_ALIGN_START);
+#if GTK_CHECK_VERSION (3, 16, 0)
+  gtk_label_set_xalign (GTK_LABEL (priv->cond_temp), 0.0);
 #else
-  gtk_misc_set_alignment (GTK_MISC (priv->cond_temp), 0, 0.5);
+  gtk_misc_set_alignment (GTK_MISC (priv->cond_temp), 0.0, 0.5);
 #endif
 
   priv->cond_apparent = gtk_label_new ("");
@@ -457,10 +457,10 @@ static void mateweather_dialog_create(MateWeatherDialog* dialog)
                     (GtkAttachOptions) (0), 0, 0);
   gtk_label_set_selectable (GTK_LABEL (priv->cond_apparent), TRUE);
   gtk_label_set_justify (GTK_LABEL (priv->cond_apparent), GTK_JUSTIFY_LEFT);
-#if GTK_CHECK_VERSION (3, 0, 0)
-  gtk_widget_set_halign (priv->cond_apparent, GTK_ALIGN_START);
+#if GTK_CHECK_VERSION (3, 16, 0)
+  gtk_label_set_xalign (GTK_LABEL (priv->cond_apparent), 0.0);
 #else
-  gtk_misc_set_alignment (GTK_MISC (priv->cond_apparent), 0, 0.5);
+  gtk_misc_set_alignment (GTK_MISC (priv->cond_apparent), 0.0, 0.5);
 #endif
 
   priv->cond_dew = gtk_label_new ("");
@@ -470,10 +470,10 @@ static void mateweather_dialog_create(MateWeatherDialog* dialog)
                     (GtkAttachOptions) (0), 0, 0);
   gtk_label_set_selectable (GTK_LABEL (priv->cond_dew), TRUE);
   gtk_label_set_justify (GTK_LABEL (priv->cond_dew), GTK_JUSTIFY_LEFT);
-#if GTK_CHECK_VERSION (3, 0, 0)
-  gtk_widget_set_halign (priv->cond_dew, GTK_ALIGN_START);
+#if GTK_CHECK_VERSION (3, 16, 0)
+  gtk_label_set_xalign (GTK_LABEL (priv->cond_dew), 0.0);
 #else
-  gtk_misc_set_alignment (GTK_MISC (priv->cond_dew), 0, 0.5);
+  gtk_misc_set_alignment (GTK_MISC (priv->cond_dew), 0.0, 0.5);
 #endif
 
   priv->cond_humidity = gtk_label_new ("");
@@ -483,10 +483,10 @@ static void mateweather_dialog_create(MateWeatherDialog* dialog)
                     (GtkAttachOptions) (0), 0, 0);
   gtk_label_set_selectable (GTK_LABEL (priv->cond_humidity), TRUE);
   gtk_label_set_justify (GTK_LABEL (priv->cond_humidity), GTK_JUSTIFY_LEFT);
-#if GTK_CHECK_VERSION (3, 0, 0)
-  gtk_widget_set_halign (priv->cond_humidity, GTK_ALIGN_START);
+#if GTK_CHECK_VERSION (3, 16, 0)
+  gtk_label_set_xalign (GTK_LABEL (priv->cond_humidity), 0.0);
 #else
-  gtk_misc_set_alignment (GTK_MISC (priv->cond_humidity), 0, 0.5);
+  gtk_misc_set_alignment (GTK_MISC (priv->cond_humidity), 0.0, 0.5);
 #endif
 
   priv->cond_wind = gtk_label_new ("");
@@ -496,10 +496,10 @@ static void mateweather_dialog_create(MateWeatherDialog* dialog)
                     (GtkAttachOptions) (0), 0, 0);
   gtk_label_set_selectable (GTK_LABEL (priv->cond_wind), TRUE);
   gtk_label_set_justify (GTK_LABEL (priv->cond_wind), GTK_JUSTIFY_LEFT);
-#if GTK_CHECK_VERSION (3, 0, 0)
-  gtk_widget_set_halign (priv->cond_wind, GTK_ALIGN_START);
+#if GTK_CHECK_VERSION (3, 16, 0)
+  gtk_label_set_xalign (GTK_LABEL (priv->cond_wind), 0.0);
 #else
-  gtk_misc_set_alignment (GTK_MISC (priv->cond_wind), 0, 0.5);
+  gtk_misc_set_alignment (GTK_MISC (priv->cond_wind), 0.0, 0.5);
 #endif
 
   priv->cond_pressure = gtk_label_new ("");
@@ -509,10 +509,10 @@ static void mateweather_dialog_create(MateWeatherDialog* dialog)
                     (GtkAttachOptions) (0), 0, 0);
   gtk_label_set_selectable (GTK_LABEL (priv->cond_pressure), TRUE);
   gtk_label_set_justify (GTK_LABEL (priv->cond_pressure), GTK_JUSTIFY_LEFT);
-#if GTK_CHECK_VERSION (3, 0, 0)
-  gtk_widget_set_halign (priv->cond_pressure, GTK_ALIGN_START);
+#if GTK_CHECK_VERSION (3, 16, 0)
+  gtk_label_set_xalign (GTK_LABEL (priv->cond_pressure), 0.0);
 #else
-  gtk_misc_set_alignment (GTK_MISC (priv->cond_pressure), 0, 0.5);
+  gtk_misc_set_alignment (GTK_MISC (priv->cond_pressure), 0.0, 0.5);
 #endif
 
   priv->cond_vis = gtk_label_new ("");
@@ -522,10 +522,10 @@ static void mateweather_dialog_create(MateWeatherDialog* dialog)
                     (GtkAttachOptions) (0), 0, 0);
   gtk_label_set_selectable (GTK_LABEL (priv->cond_vis), TRUE);
   gtk_label_set_justify (GTK_LABEL (priv->cond_vis), GTK_JUSTIFY_LEFT);
-#if GTK_CHECK_VERSION (3, 0, 0)
-  gtk_widget_set_halign (priv->cond_vis, GTK_ALIGN_START);
+#if GTK_CHECK_VERSION (3, 16, 0)
+  gtk_label_set_xalign (GTK_LABEL (priv->cond_vis), 0.0);
 #else
-  gtk_misc_set_alignment (GTK_MISC (priv->cond_vis), 0, 0.5);
+  gtk_misc_set_alignment (GTK_MISC (priv->cond_vis), 0.0, 0.5);
 #endif
 
   priv->cond_sunrise = gtk_label_new ("");
@@ -535,10 +535,10 @@ static void mateweather_dialog_create(MateWeatherDialog* dialog)
                     (GtkAttachOptions) (0), 0, 0);
   gtk_label_set_selectable (GTK_LABEL (priv->cond_sunrise), TRUE);
   gtk_label_set_justify (GTK_LABEL (priv->cond_sunrise), GTK_JUSTIFY_LEFT);
-#if GTK_CHECK_VERSION (3, 0, 0)
-  gtk_widget_set_halign (priv->cond_sunrise, GTK_ALIGN_START);
+#if GTK_CHECK_VERSION (3, 16, 0)
+  gtk_label_set_xalign (GTK_LABEL (priv->cond_sunrise), 0.0);
 #else
-  gtk_misc_set_alignment (GTK_MISC (priv->cond_sunrise), 0, 0.5);
+  gtk_misc_set_alignment (GTK_MISC (priv->cond_sunrise), 0.0, 0.5);
 #endif
 
   priv->cond_sunset = gtk_label_new ("");
@@ -548,10 +548,10 @@ static void mateweather_dialog_create(MateWeatherDialog* dialog)
                     (GtkAttachOptions) (0), 0, 0);
   gtk_label_set_selectable (GTK_LABEL (priv->cond_sunset), TRUE);
   gtk_label_set_justify (GTK_LABEL (priv->cond_sunset), GTK_JUSTIFY_LEFT);
-#if GTK_CHECK_VERSION (3, 0, 0)
-  gtk_widget_set_halign (priv->cond_sunset, GTK_ALIGN_START);
+#if GTK_CHECK_VERSION (3, 16, 0)
+  gtk_label_set_xalign (GTK_LABEL (priv->cond_sunset), 0.0);
 #else
-  gtk_misc_set_alignment (GTK_MISC (priv->cond_sunset), 0, 0.5);
+  gtk_misc_set_alignment (GTK_MISC (priv->cond_sunset), 0.0, 0.5);
 #endif
 
   cond_frame_alignment = gtk_alignment_new (0.5, 0, 1, 0);

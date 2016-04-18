@@ -1,5 +1,17 @@
-Changes in MATE-Applets 1.13.0
+Changes in MATE-Applets 1.14.0
 ==============================
+
+  - Drop MateConf migration scripts
+  - Drop null_applet which isn't even buildable these days
+  - Re-license command and timer applets under GPL-2+
+  - Merge netspeed applet from mate-netspeed project (and discontinue
+    that project)
+  - GTK+3: fix cpufreq applet rendering
+  - GTK+3: fix setting fg/bg colors and font type in stickynotes applet
+  - GTK+3: fix several deprecations
+  - Some more fixes and cleanups
+  - Translations update
+  - Fix Changelog generation
 
 Changes in MATE-Applets 1.12.1
 ==============================
