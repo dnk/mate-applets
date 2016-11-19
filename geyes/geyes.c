@@ -1,4 +1,4 @@
-/* -*- Mode: C++; c-basic-offset: 8 -*-
+/* -*- Mode: C; c-basic-offset: 4 -*-
  * geyes.c - A cheap xeyes ripoff.
  * Copyright (C) 1999 Dave Camp
  *
@@ -20,7 +20,6 @@
 #include <config.h>
 #include <math.h>
 #include <stdlib.h>
-#include <libmate-desktop/mate-aboutdialog.h>
 #include <mate-panel-applet.h>
 #include <mate-panel-applet-gsettings.h>
 #include "geyes.h"
@@ -134,8 +133,12 @@ timer_cb (EyesApplet *eyes_applet)
 {
 #if GTK_CHECK_VERSION (3, 0, 0)
         GdkDisplay *display;
+#if GTK_CHECK_VERSION (3, 20, 0)
+        GdkSeat *seat;
+#else
         GdkDeviceManager *device_manager;
         GdkDevice *device;
+#endif
 #endif
         gint x, y;
         gint pupil_x, pupil_y;
@@ -143,14 +146,24 @@ timer_cb (EyesApplet *eyes_applet)
 
 #if GTK_CHECK_VERSION (3, 0, 0)
         display = gtk_widget_get_display (GTK_WIDGET (eyes_applet->applet));
+#if GTK_CHECK_VERSION (3, 20, 0)
+        seat = gdk_display_get_default_seat (display);
+#else
         device_manager = gdk_display_get_device_manager (display);
         device = gdk_device_manager_get_client_pointer (device_manager);
+#endif
 #endif
 
         for (i = 0; i < eyes_applet->num_eyes; i++) {
 		if (gtk_widget_get_realized (eyes_applet->eyes[i])) {
 #if GTK_CHECK_VERSION (3, 0, 0)
+#if GTK_CHECK_VERSION (3, 20, 0)
+            gdk_window_get_device_position (gtk_widget_get_window (eyes_applet->eyes[i]),
+                                            gdk_seat_get_pointer (seat),
+                                            &x, &y, NULL);
+#else
 			gdk_window_get_device_position (gtk_widget_get_window (eyes_applet->eyes[i]), device, &x, &y, NULL);
+#endif
 #else
 			gtk_widget_get_pointer (eyes_applet->eyes[i], &x, &y);
 #endif
@@ -171,10 +184,14 @@ static void
 about_cb (GtkAction   *action,
 	  EyesApplet  *eyes_applet)
 {
-        static const gchar *authors [] = {
-		"Dave Camp <campd@oit.edu>",
-		NULL
+    static const gchar *authors [] = {
+                "Dave Camp <campd@oit.edu>",
+                NULL
 	};
+
+    char copyright[] = \
+                "Copyright \xc2\xa9 2012-2016 MATE developers\n"
+                "Copyright \xC2\xA9 1999 Dave Camp";
 
 	const gchar *documenters[] = {
                 "Arjan Scherpenisse <acscherp@wins.uva.nl>",
@@ -183,15 +200,15 @@ about_cb (GtkAction   *action,
 		NULL
 	};
 
-	mate_show_about_dialog (NULL,
-		"version",	VERSION,
-		"comments",	_("A goofy set of eyes for the MATE "
-				  "panel. They follow your mouse."),
-		"copyright",	"\xC2\xA9 1999 Dave Camp",
-		"authors",	authors,
-		"documenters",	documenters,
-		"translator-credits",	_("translator-credits"),
-		"logo-icon-name",	"mate-eyes-applet",
+	gtk_show_about_dialog (NULL,
+		"version",            VERSION,
+		"comments",           _("A goofy set of eyes for the MATE "
+		                      "panel. They follow your mouse."),
+		"copyright",          copyright,
+		"authors",            authors,
+		"documenters",        documenters,
+		"translator-credits", _("translator-credits"),
+		"logo-icon-name",     "mate-eyes-applet",
 		NULL);
 }
 

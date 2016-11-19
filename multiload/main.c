@@ -27,8 +27,6 @@
 #include <mate-panel-applet.h>
 #include <mate-panel-applet-gsettings.h>
 
-#include <libmate-desktop/mate-aboutdialog.h>
-
 #include "global.h"
 
 static void
@@ -44,6 +42,10 @@ about_cb (GtkAction       *action,
 		NULL
     };
 
+    char copyright[] = \
+		"Copyright \xc2\xa9 2012-2016 MATE developers\n"
+		"Copyright \xc2\xa9 1999-2005 Free Software Foundation and others";
+
     const gchar * const documenters[] =
     {
 		"Chee Bin HOH <cbhoh@gnome.org>",
@@ -51,10 +53,9 @@ about_cb (GtkAction       *action,
 		NULL
     };
 
-    mate_show_about_dialog (NULL,
+    gtk_show_about_dialog (NULL,
 	"version",	VERSION,
-	"copyright",	"\xC2\xA9 1999-2005 Free Software Foundation "
-			"and others",
+	"copyright",	copyright,
 	"comments",	_("A system load monitor capable of displaying graphs "
 			"for CPU, ram, and swap space use, plus network "
 			"traffic."),
@@ -95,6 +96,9 @@ start_procman (MultiloadApplet *ma)
 	GDesktopAppInfo *appinfo;
 	gchar *monitor;
 	GdkAppLaunchContext *launch_context;
+#if GTK_CHECK_VERSION (3, 0, 0)
+	GdkDisplay *display;
+#endif
 	GAppInfo *app_info;
 	GdkScreen *screen;
 
@@ -111,7 +115,7 @@ start_procman (MultiloadApplet *ma)
 		GdkAppLaunchContext *context;
 		screen = gtk_widget_get_screen (GTK_WIDGET (ma->applet));
 #if GTK_CHECK_VERSION (3, 0, 0)
-		GdkDisplay *display = gdk_screen_get_display (screen);
+		display = gdk_screen_get_display (screen);
 		context = gdk_display_get_app_launch_context (display);
 #else
 		context = gdk_app_launch_context_new ();
@@ -128,7 +132,12 @@ start_procman (MultiloadApplet *ma)
 							      &error);
 
 		if (!error) {
+#if GTK_CHECK_VERSION (3, 0, 0)
+			display = gdk_screen_get_display (screen);
+			launch_context = gdk_display_get_app_launch_context (display);
+#else
 			launch_context = gdk_app_launch_context_new ();
+#endif
 			gdk_app_launch_context_set_screen (launch_context, screen);
 			g_app_info_launch (app_info, NULL, G_APP_LAUNCH_CONTEXT (launch_context), &error);
 

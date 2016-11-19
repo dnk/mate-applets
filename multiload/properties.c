@@ -214,17 +214,19 @@ add_page(GtkWidget *notebook, gchar *label)
 
 /* save the selected color to gsettings and apply it on the applet */
 static void
+#if GTK_CHECK_VERSION (3, 0, 0)
+color_picker_set_cb(GtkColorChooser *color_picker, gchar *key)
+#else
 color_picker_set_cb(GtkColorButton *color_picker, gchar *key)
+#endif
 {
 #if GTK_CHECK_VERSION (3, 0, 0)
 	gchar *color_string;
-#else
-	gchar color_string[8];
-#endif
 	guint8 prop_type;
-#if GTK_CHECK_VERSION (3, 0, 0)
 	GdkRGBA color;
 #else
+	gchar color_string[8];
+	guint8 prop_type;
 	GdkColor color;
 #endif
 	MultiloadApplet *ma;
@@ -246,29 +248,29 @@ color_picker_set_cb(GtkColorButton *color_picker, gchar *key)
 	else
 		g_assert_not_reached();
 
-#if GTK_CHECK_VERSION (3, 4, 0)
-	gtk_color_chooser_get_rgba(GTK_COLOR_CHOOSER(color_picker), &color);
-#elif GTK_CHECK_VERSION (3, 0, 0)
-	gtk_color_button_get_rgba(color_picker, &color);
-#else
-	gtk_color_button_get_color(color_picker, &color);
-#endif
-
 #if GTK_CHECK_VERSION (3, 0, 0)
-	color_string = gdk_rgba_to_string(&color);
-#else
-	snprintf(color_string, 8, "#%02X%02X%02X", 
-		 color.red / 256, color.green / 256, color.blue / 256);
-#endif
+	gtk_color_chooser_get_rgba(color_picker, &color);
+
+	color_string = gdk_rgba_to_string (&color);
 	g_settings_set_string(ma->settings, key, color_string);
 
-#if GTK_CHECK_VERSION (3, 0, 0)
-	gdk_rgba_parse(&(ma->graphs[prop_type]->colors[g_ascii_digit_value(key[strlen(key) - 1]) ]), color_string);
-	g_free(color_string);
+	gdk_rgba_parse(&(ma->graphs[prop_type]->colors[g_ascii_digit_value(key[strlen(key) - 1]) ]),
+					color_string);
 #else
-	gdk_color_parse(color_string,
+	gtk_color_button_get_color(color_picker, &color);
+	
+	snprintf(color_string, 8, "#%02X%02X%02X", 
+		 color.red / 256, color.green / 256, color.blue / 256);
+	g_settings_set_string(ma->settings, key, color_string);
+
+	gdk_color_parse(color_string, 
 			&(ma->graphs[prop_type]->colors[g_ascii_digit_value(key[strlen(key) - 1]) ]) );
 #endif
+	
+#if !GTK_CHECK_VERSION (3, 0, 0)
+	ma->graphs[prop_type]->colors_allocated = FALSE;
+#endif
+	
 	return;
 }
 
@@ -285,13 +287,12 @@ add_color_selector(GtkWidget *page, gchar *name, gchar *key, MultiloadApplet *ma
 	GdkColor color;
 #endif
 	gchar *color_string;
-
+	
 	color_string = g_settings_get_string (ma->settings, key);
 	if (!color_string)
 		color_string = g_strdup ("#000000");
-
 #if GTK_CHECK_VERSION (3, 0, 0)
-	gdk_rgba_parse(&color, color_string);
+	gdk_rgba_parse (&color, color_string);
 #else
 	color.red   = (g_ascii_xdigit_value(color_string[1]) * 16 
                        + g_ascii_xdigit_value(color_string[2])) * 256;
@@ -301,7 +302,7 @@ add_color_selector(GtkWidget *page, gchar *name, gchar *key, MultiloadApplet *ma
                        + g_ascii_xdigit_value(color_string[6])) * 256;
 #endif
 	g_free (color_string);
-
+		
 #if GTK_CHECK_VERSION (3, 0, 0)
 	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
 #else
@@ -321,10 +322,8 @@ add_color_selector(GtkWidget *page, gchar *name, gchar *key, MultiloadApplet *ma
 	
 	g_object_set_data (G_OBJECT (color_picker), "MultiloadApplet", ma);
 
-#if GTK_CHECK_VERSION (3, 4, 0)
+#if GTK_CHECK_VERSION (3, 0, 0)
 	gtk_color_chooser_set_rgba(GTK_COLOR_CHOOSER(color_picker), &color);
-#elif GTK_CHECK_VERSION (3, 0, 0)
-	gtk_color_button_set_rgba(GTK_COLOR_BUTTON(color_picker), &color);
 #else
 	gtk_color_button_set_color(GTK_COLOR_BUTTON(color_picker), &color);
 #endif
@@ -764,13 +763,8 @@ multiload_properties_cb (GtkAction       *action,
 	
 	dialog = gtk_dialog_new_with_buttons (_("System Monitor Preferences"),
 					      NULL, 0,
-#if GTK_CHECK_VERSION (3, 10, 0)
-					   _("_Help"), GTK_RESPONSE_HELP,
-					   _("_Close"), GTK_RESPONSE_CLOSE,
-#else
 					   GTK_STOCK_HELP, GTK_RESPONSE_HELP,
 					   GTK_STOCK_CLOSE, GTK_RESPONSE_CLOSE,
-#endif
 					      NULL);
 	gtk_window_set_screen (GTK_WINDOW (dialog),
 			       gtk_widget_get_screen (GTK_WIDGET (ma->applet)));

@@ -38,7 +38,6 @@
 #include <X11/keysymdef.h>
 #include "applet.h"
 
-#include <libmate-desktop/mate-aboutdialog.h>
 #if GTK_CHECK_VERSION (3, 0, 0)
 #define gtk_vbox_new(X,Y) gtk_box_new(GTK_ORIENTATION_VERTICAL,Y)
 #define gtk_hbox_new(X,Y) gtk_box_new(GTK_ORIENTATION_HORIZONTAL,Y)
@@ -139,10 +138,14 @@ static void about_cb(GtkAction* action, AccessxStatusApplet* sapplet)
 		NULL
 	};
 
-	mate_show_about_dialog(NULL,
+	char copyright[] = \
+		"Copyright \xc2\xa9 2012-2016 MATE developers\n"
+		"Copyright \xc2\xa9 2003 Sun Microsystems";
+
+	gtk_show_about_dialog(NULL,
 		"version", VERSION,
 		"comments", _("Shows the state of AccessX features such as latched modifiers"),
-		"copyright", "\xC2\xA9 2003 Sun Microsystems",
+		"copyright", copyright,
 		"authors", authors,
 		"documenters", documenters,
 		"translator-credits", _("translator-credits"),
@@ -687,7 +690,7 @@ static void accessx_status_applet_update(AccessxStatusApplet* sapplet, AccessxSt
 		g_object_unref(pixbuf);
 	}
 
-	if (notify_type & ACCESSX_STATUS_MOUSEKEYS)
+	if ((notify_type & ACCESSX_STATUS_MOUSEKEYS) && (event != NULL))
 	{
 		GdkPixbuf* pixbuf = accessx_status_applet_mousekeys_image(sapplet, &event->state);
 		gtk_image_set_from_pixbuf(GTK_IMAGE(sapplet->mousefoo),  pixbuf);
@@ -1152,7 +1155,6 @@ static AccessxStatusApplet* create_applet(MatePanelApplet* applet)
 	gtk_widget_hide(sapplet->mousefoo);
 
 	sapplet->shift_indicator = gtk_image_new_from_stock(SHIFT_KEY_ICON, icon_size_spec);
-	gtk_widget_hide(sapplet->mousefoo);
 	sapplet->ctrl_indicator = gtk_image_new_from_stock(CONTROL_KEY_ICON, icon_size_spec);
 	sapplet->alt_indicator = gtk_image_new_from_stock(ALT_KEY_ICON, icon_size_spec);
 	sapplet->meta_indicator = gtk_image_new_from_stock(META_KEY_ICON, icon_size_spec);

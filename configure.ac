@@ -1,7 +1,7 @@
 dnl ***************************************************************************
 dnl *** configure.in for MATE-APPLETS                                      ***
 dnl ***************************************************************************
-AC_INIT(mate-applets, 1.14.0)
+AC_INIT(mate-applets, 1.16.0)
 AC_PREREQ(2.59)
 
 AC_CONFIG_HEADERS(config.h)
@@ -15,13 +15,12 @@ GLIB_REQUIRED=2.36.0
 GIO_REQUIRED=2.15.3
 LIBPANEL4_REQUIRED=1.7.0
 LIBGTOP_REQUIRED=2.11.92
-LIBMATE_DESKTOP_REQUIRED=1.9.0
 LIBNOTIFY_REQUIRED=0.7.0
 UPOWER_REQUIRED=0.9.4
 DBUS_REQUIRED=1.1.2
 DBUS_GLIB_REQUIRED=0.74
 LIBXML_REQUIRED=2.5.0
-POLKIT_REQUIRED=0.92
+POLKIT_REQUIRED=0.97
 dnl ***************************************************************************
 
 AM_MAINTAINER_MODE
@@ -136,11 +135,6 @@ PKG_CHECK_MODULES(MATE_APPLETS4, libmatepanelapplet-4.0 >= $LIBPANEL4_REQUIRED)
 AC_SUBST(MATE_APPLETS4_CFLAGS)
 AC_SUBST(MATE_APPLETS4_LIBS)
 
-dnl -- check for mate-desktop (required) -------------------------------------
-PKG_CHECK_MODULES(MATEDESKTOP, mate-desktop-$GTK_API_VERSION >= $LIBMATE_DESKTOP_REQUIRED)
-AC_SUBST(MATEDESKTOP_CFLAGS)
-AC_SUBST(MATEDESKTOP_LIBS)
-
 dnl -- check for libgtop (optional) -------------------------------------------
 build_gtop_applets=false
 PKG_CHECK_MODULES(GTOP_APPLETS,
@@ -209,7 +203,7 @@ AC_SUBST(POLKIT_LIBS)
 dnl -- check for libupower-glib (optional) ------------------------------------
 UPOWER_CFLAGS=
 UPOWER_LIBS=
-AC_ARG_WITH(upower, [   --without-upower           build without upower support])
+AC_ARG_WITH(upower, [  --without-upower        build without upower support])
 
 if test "x$with_upower" != xno; then
    PKG_CHECK_MODULES(UPOWER, upower-glib >= $UPOWER_REQUIRED,
@@ -385,17 +379,17 @@ AC_ARG_ENABLE(cpufreq,
 dnl --enable-frequency-selector=(yes/no)
 AC_ARG_ENABLE(frequency-selector,
 	      [  --enable-frequency-selector[@<:@=yes/no@:>@]
-	                  build frequency selector [@<:@default: yes@:>@]], ,
+	                  build frequency selector [@<:@default: yes@:>@]], enable_selector=$enableval,
 	      enable_selector=yes)
 
 dnl --enable-suid=(yes/no)
 AC_ARG_ENABLE(suid,
-       [  --enable-suid[@:<@=yes/no@:>@]  suid root the frequency selector executable
-                   [@<:@default: yes@:>@]], ,
-       suid=yes)
+	      [  --enable-suid[@<:@=yes/no@:>@]  suid root the frequency selector executable
+                          [@<:@default: yes@:>@]],,
+	      enable_suid=yes)
 
 if test "x$HAVE_POLKIT" = "xyes"; then
-   suid=no
+   enable_suid=no
 fi
 
 AC_ARG_WITH([cpufreq-lib],
@@ -427,7 +421,7 @@ fi
 
 AM_CONDITIONAL(BUILD_CPUFREQ_APPLET, test x$build_cpufreq_applet = xyes)
 AM_CONDITIONAL(BUILD_CPUFREQ_SELECTOR, test x$enable_selector = xyes)
-AM_CONDITIONAL(CPUFREQ_SELECTOR_SUID, test x$suid = xyes)
+AM_CONDITIONAL(CPUFREQ_SELECTOR_SUID, test x$enable_suid = xyes)
 
 dnl ***************************************************************************
 dnl *** timerapplet specific checks                                       ***
@@ -662,7 +656,7 @@ mate-applets-$VERSION configure summary:
         - cpufreq                  $build_cpufreq_applet
             - building selector    $enable_selector
             - using PolicyKit      $HAVE_POLKIT
-            - enabling suid bit    $suid
+            - enabling suid bit    $enable_suid
         - drivemount               always
         - geyes                    always
         - mateweather              $build_libmateweather_applets

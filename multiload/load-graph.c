@@ -262,8 +262,11 @@ load_graph_leave_cb(GtkWidget *widget, GdkEventCrossing *event, gpointer data)
 static void
 load_graph_load_config (LoadGraph *g)
 {
-	
+#if GTK_CHECK_VERSION (3, 0, 0)
+    gchar *name, *temp;
+#else
     gchar name [BUFSIZ], *temp;
+#endif
     guint i;
 
 	if (!g->colors)
@@ -272,10 +275,14 @@ load_graph_load_config (LoadGraph *g)
 #else
 		g->colors = g_new0(GdkColor, g->n);
 #endif
-
+		
 	for (i = 0; i < g->n; i++)
 	{
+#if GTK_CHECK_VERSION (3, 0, 0)
+		name = g_strdup_printf ("%s-color%u", g->name, i);
+#else
 		g_snprintf(name, sizeof(name), "%s-color%u", g->name, i);
+#endif
 		temp = g_settings_get_string(g->multiload->settings, name);
 		if (!temp)
 			temp = g_strdup ("#000000");
@@ -285,6 +292,9 @@ load_graph_load_config (LoadGraph *g)
 		gdk_color_parse(temp, &(g->colors[i]));
 #endif
 		g_free(temp);
+#if GTK_CHECK_VERSION (3, 0, 0)
+		g_free(name);
+#endif
 	}
 }
 
@@ -309,7 +319,7 @@ load_graph_new (MultiloadApplet *ma, guint n, const gchar *label,
     g->tooltip_update = FALSE;
     g->show_frame = TRUE;
     g->multiload = ma;
-
+		
 #if GTK_CHECK_VERSION (3, 0, 0)
     g->main_widget = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
     g->box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);

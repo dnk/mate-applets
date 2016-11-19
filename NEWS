@@ -1,3 +1,26 @@
+Changes in MATE-Applets 1.16.0
+==============================
+
+  - Build: require polkit 0.97
+  - Use GtkAboutDialog instead of MateAboutDialog
+  - Netspeed: use GtkColorButton/GtkColorChooser
+  - Drop dependency on libmate-desktop
+  - GTK+3: fix various deprecations
+  - Some code cleanups
+  - Translations update
+
+Changes in MATE-Applets 1.14.1
+==============================
+
+  - Accessx-status: fix possible crash when updating layout
+  - Cpufreq: fix build with kernel 4.7
+  - Cpufreq: make build options --enable-frequency-selector
+    and --enable-suid actually work
+  - Netspeed: fix default route
+  - Some more fixes and cleanups
+  - Translations update
+  - Make distcheck use currently selected GTK+ version
+
 Changes in MATE-Applets 1.14.0
 ==============================
 
