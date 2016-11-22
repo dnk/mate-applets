@@ -14,7 +14,7 @@ dnl ***************************************************************************
 GLIB_REQUIRED=2.36.0
 GIO_REQUIRED=2.15.3
 LIBPANEL4_REQUIRED=1.7.0
-LIBGTOP_REQUIRED=2.11.92
+LIBGTOP_REQUIRED=2.12.0
 LIBNOTIFY_REQUIRED=0.7.0
 UPOWER_REQUIRED=0.9.4
 DBUS_REQUIRED=1.1.2
@@ -117,7 +117,7 @@ dnl ***************************************************************************
 
 
 dnl ***************************************************************************
-dnl *** Use pkg-config to check for dependancies                            ***
+dnl *** Use pkg-config to check for dependencies                            ***
 dnl ***************************************************************************
 
 dnl -- check for gio (required) ------------------------------------------
@@ -244,7 +244,7 @@ AC_SUBST(XML2_LIBS)
 
  dnl -- check for libmateweather (required for mateweather applet) ------------------
 build_libmateweather_applets=false
-PKG_CHECK_MODULES(LIBMATEWEATHER, mateweather >= 1.6.1,
+PKG_CHECK_MODULES(LIBMATEWEATHER, mateweather >= 1.16.0,
 	          build_libmateweather_applets=true,
 		  AC_MSG_WARN([libmateweather not found. Not building the weather applet.]))
 AC_SUBST(LIBMATEWEATHER_CFLAGS)
