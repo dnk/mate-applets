@@ -336,9 +336,7 @@ drive_button_update (gpointer user_data)
     GtkIconTheme *icon_theme;
     GtkIconInfo *icon_info;
     GIcon *icon;
-    int width, height;
     GdkPixbuf *pixbuf = NULL, *scaled;
-    GtkRequisition button_req, image_req;
     char *display_name, *tip;
 
     g_return_val_if_fail (DRIVE_IS_BUTTON (user_data), FALSE);
@@ -382,21 +380,10 @@ drive_button_update (gpointer user_data)
     g_free (tip);
     g_free (display_name);
 
-    /* base the icon size on the desired button size */
-#if GTK_CHECK_VERSION (3, 0, 0)
-    gtk_widget_get_preferred_size (GTK_WIDGET (self), &button_req, NULL);
-    gtk_widget_get_preferred_size (gtk_bin_get_child (GTK_BIN (self)), &image_req, NULL);
-#else
-    gtk_widget_size_request (GTK_WIDGET (self), &button_req);
-    gtk_widget_size_request (gtk_bin_get_child (GTK_BIN (self)), &image_req);
-#endif
-    width = self->icon_size - (button_req.width - image_req.width);
-    height = self->icon_size - (button_req.height - image_req.height);
-
     screen = gtk_widget_get_screen (GTK_WIDGET (self));
     icon_theme = gtk_icon_theme_get_for_screen (screen);
     icon_info = gtk_icon_theme_lookup_by_gicon (icon_theme, icon,
-    						MIN (width, height),
+    						self->icon_size,
     						GTK_ICON_LOOKUP_USE_BUILTIN);
     if (icon_info)
     {
@@ -413,7 +400,7 @@ drive_button_update (gpointer user_data)
     if (!pixbuf)
 	return FALSE;
 
-    scaled = gdk_pixbuf_scale_simple (pixbuf, width, height, GDK_INTERP_BILINEAR);
+    scaled = gdk_pixbuf_scale_simple (pixbuf, self->icon_size, self->icon_size, GDK_INTERP_BILINEAR);
     if (scaled) {
 	g_object_unref (pixbuf);
 	pixbuf = scaled;
@@ -421,12 +408,6 @@ drive_button_update (gpointer user_data)
 
     gtk_image_set_from_pixbuf (GTK_IMAGE (gtk_bin_get_child (GTK_BIN (self))), pixbuf);
     g_object_unref (pixbuf);
-
-#if GTK_CHECK_VERSION (3, 0, 0)
-    gtk_widget_get_preferred_size (GTK_WIDGET (self), &button_req, NULL);
-#else
-    gtk_widget_size_request (GTK_WIDGET (self), &button_req);
-#endif
 
     return FALSE;
 }
